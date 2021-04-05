@@ -5,8 +5,7 @@ from pytest import fixture, mark
 sys.path.append(path.abspath(path.join(path.dirname(__file__),
                 path.pardir)))
 
-# from fileflamingo.EncryptionFile import EncryptionFile
-from fileflamingo.BaseFile import BaseFile
+from fileflamingo.BaseFile import BaseFile  # noqa: E402
 
 
 @fixture

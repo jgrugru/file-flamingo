@@ -31,3 +31,5 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
 )
+
+# flake8: noqa
