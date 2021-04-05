@@ -1,11 +1,13 @@
-from os import path, remove, stat, makedirs
 from .BaseFile import BaseFile
 from .Encryptor import Encryptor
 
+
 class EncryptionFile(BaseFile):
     """
-    Base file class inherited by EnvDir, EnvFile,
-    PemFile. Contains functions that can be utilized by any file.
+    EncryptionFile class inherits from BaseFile. EncryptionFile allows you to
+    encrypt and decrypt the contents of the file. Constructor requires a
+    filepath to an RSA key. The RSA key is passed to the Encryptor
+    class which does the encryption and decryption.
     """
 
     def __init__(self, filepath, rsa_filepath):
@@ -16,7 +18,8 @@ class EncryptionFile(BaseFile):
 
     def decrypt(self):
         if self.filepath_exists() and self.is_encrypted:
-            decrypted_data = self.encryptor.decrypt_data(self.get_bytes_from_file())
+            decrypted_data = self.encryptor.decrypt_data(
+                self.get_bytes_from_file())
             self.write_data_to_file(decrypted_data)
             self.is_encrypted = False
         else:
@@ -24,7 +27,8 @@ class EncryptionFile(BaseFile):
 
     def encrypt(self):
         if self.filepath_exists() and not self.is_encrypted:
-            encrypted_data = self.encryptor.encrypt_data(self.get_contents_of_file())
+            encrypted_data = self.encryptor.encrypt_data(
+                self.get_contents_of_file())
             self.write_bytes_to_file(encrypted_data)
             self.is_encrypted = True
         else:

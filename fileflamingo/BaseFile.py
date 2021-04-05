@@ -3,8 +3,20 @@ from os import path, remove, stat, makedirs
 
 class BaseFile():
     """
-    Base file class inherited by EnvDir, EnvFile,
-    PemFile. Contains functions that can be utilized by any file.
+    Base file class that can be utilized by any
+    object that represents a file. Contains
+    functions:
+    get_contents_of_file (only works with text),
+    create_filepath (either a file or a dir),
+    delete_file (only works on files, not dirs),
+    append_data_to_file,
+    write_data_to_file,
+    clear_file,
+    is_binary,
+    is_empty,
+    is_dir,
+    is_file,
+    filepath_exists.
     """
 
     def __init__(self, filepath):
@@ -15,12 +27,6 @@ class BaseFile():
 
     def get_filepath(self):
         return self.filepath
-
-    def get_contents_of_file(self):
-        data = None
-        with open(self.filepath, 'r') as my_file:
-            data = my_file.read()
-        return data
 
     def create_filepath(self, verbose_flag=False):
         makedirs(path.dirname(self.filepath), exist_ok=True)
@@ -36,6 +42,12 @@ class BaseFile():
         else:
             print("The file could not be deleted because "
                   + self.filepath + " does not exist or it is a directory.")
+
+    def get_contents_of_file(self):
+        data = None
+        with open(self.filepath, 'r') as my_file:
+            data = my_file.read()
+        return data
 
     def append_data_to_file(self, data):
         with open(self.filepath, 'a') as f:
@@ -62,6 +74,8 @@ class BaseFile():
                 f.read()
         except UnicodeDecodeError:
             return True
+        except FileNotFoundError:
+            return False
         return False
 
     def is_empty(self, verbose_flag=False):
