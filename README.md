@@ -1,6 +1,9 @@
 # file-flamingo
-A suite base classes that simplify interactions with files.
+A suite of base classes that simplifies interactions with files.
 
+```
+pip3 install fileflamingo
+```
 
 # BaseFile
     - get_contents_of_file (only works with text)
