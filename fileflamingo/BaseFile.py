@@ -16,6 +16,12 @@ class BaseFile():
     def get_filepath(self):
         return self.filepath
 
+    def get_contents_of_file(self):
+        data = None
+        with open(self.filepath, 'r') as my_file:
+            data = my_file.read()
+        return data
+
     def create_filepath(self, verbose_flag=False):
         makedirs(path.dirname(self.filepath), exist_ok=True)
         try:
@@ -24,17 +30,20 @@ class BaseFile():
         except Exception:
             pass
 
-    def delete_file(self, verbose_flag=False):
+    def delete_file(self):
         if self.filepath_exists() and self.is_file():
             remove(self.filepath)
-            if verbose_flag:
-                print("Deleted " + self.filepath)
         else:
             print("The file could not be deleted because "
                   + self.filepath + " does not exist or it is a directory.")
 
-    def append_data_to_file(self, data, verbose_flag=False):
+    def append_data_to_file(self, data):
         with open(self.filepath, 'a') as f:
+            f.write(data)
+            f.close()
+
+    def write_data_to_file(self, data):
+        with open(self.filepath, 'w') as f:
             f.write(data)
             f.close()
 
