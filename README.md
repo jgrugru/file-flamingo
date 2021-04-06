@@ -30,3 +30,14 @@ pip3 install fileflamingo
 - decrypt
 - write_bytes_to_file
 - get_bytes_from_file
+
+#### EncryptionFile Example:
+```python
+from fileflamingo.EncryptionFile import EncryptionFile
+
+my_file = EncryptionFile("./encrypted.txt", './my_key.pem')
+
+my_file.create_filepath()
+my_file.append_data_to_file("I am about to be encrypted.")
+my_file.encrypt()
+```
