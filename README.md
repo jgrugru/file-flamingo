@@ -13,6 +13,9 @@ pip3 install fileflamingo
   * [EncryptionFile](https://github.com/jgrugru/file-flamingo#EncryptionFile)
 
 # BaseFile
+```python
+BaseFile(filepath)
+```
 - get_contents_of_file (only works with text)
 - create_filepath (either a file or a dir)
 - delete_file (only works on files, not dirs)
@@ -26,6 +29,9 @@ pip3 install fileflamingo
 - filepath_exists
 
 # EncryptionFile
+```python
+EncryptionFile(filepath, rsa_filepath)
+```
 - encrypt
 - decrypt
 - write_bytes_to_file
