@@ -6,6 +6,7 @@ sys.path.append(path.abspath(path.join(path.dirname(__file__),
                 path.pardir)))
 
 from fileflamingo.BaseFile import BaseFile  # noqa: E402
+from fileflamingo.RSAFile import RSAFile  # noqa: E402
 
 
 @fixture
@@ -24,6 +25,13 @@ def base_file_with_content(base_file):
 @fixture
 def env_setup_for_file_object(tmp_path):
     chdir(tmp_path)
+
+
+@fixture
+def rsa_file(tmp_path):
+    my_rsa_file = RSAFile(tmp_path)
+    my_rsa_file.gen_pem_file()
+    return my_rsa_file
 
 
 @mark.parametrize("file_path, expected_result, is_file", [

@@ -16,6 +16,7 @@ pip3 install fileflamingo
 ```python
 BaseFile(filepath)
 ```
+Functions:
 - get_contents_of_file (only works with text)
 - create_filepath (either a file or a dir)
 - delete_file (only works on files, not dirs)
@@ -32,6 +33,7 @@ BaseFile(filepath)
 ```python
 EncryptionFile(filepath, rsa_filepath)
 ```
+Functions:
 - encrypt
 - decrypt
 - write_bytes_to_file

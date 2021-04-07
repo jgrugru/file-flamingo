@@ -13,7 +13,7 @@ class EncryptionFile(BaseFile):
     def __init__(self, filepath, rsa_filepath):
         self.filepath = filepath
         self.rsa_filepath = rsa_filepath
-        self.encryptor = Encryptor(rsa_filepath)
+        self.encryptor = Encryptor(str(rsa_filepath))
         self.is_encrypted = self.is_binary()
 
     def decrypt(self):
