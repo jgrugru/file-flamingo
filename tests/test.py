@@ -29,8 +29,7 @@ def env_setup_for_file_object(tmp_path):
 
 @fixture
 def rsa_file(tmp_path):
-    my_rsa_file = RSAFile(tmp_path)
-    my_rsa_file.gen_pem_file()
+    my_rsa_file = RSAFile(path.join(tmp_path, 'my_key.pem'))
     return my_rsa_file
 
 
@@ -45,7 +44,7 @@ def rsa_file(tmp_path):
     ("../env_path/.env", True, True),
     ("../env_path1/.env/", True, False),
 ])
-def test_bf_create_and_delete_filepath(env_setup_for_file_object,
+def test_basefile_create_and_delete_filepath(env_setup_for_file_object,
                                        file_path,
                                        expected_result,
                                        is_file):
@@ -57,28 +56,38 @@ def test_bf_create_and_delete_filepath(env_setup_for_file_object,
     assert my_file.filepath_exists() != is_file
 
 
-def test_bf_get_contents_of_text_file(base_file_with_content):
+def test_basefile_get_contents_of_text_file(base_file_with_content):
     assert base_file_with_content.get_contents_of_file() == '0123456789'
 
 
-def test_bf_get_contents_of_binary_file():
+def test_basefile_get_contents_of_binary_file():
     pass
 
 
-def test_bf_write_data_to_text():
+def test_basefile_write_data_to_text():
     pass
 
 
-def test_bf_write_data_to_binary():
+def test_basefile_write_data_to_binary():
     pass
 
 
-def test_bf_clear_file(base_file, base_file_with_content):
+def test_basefile_clear_file(base_file, base_file_with_content):
     base_file_with_content.clear_file()
     assert base_file_with_content.is_empty()
     base_file.clear_file()
     assert base_file.is_empty()
 
 
-def test_bf_str(base_file):
+def test_basefile_str(base_file):
     assert base_file.get_filepath() == str(base_file)
+
+
+def test_rsafile_gen_pem_file(rsa_file):
+    rsa_file.gen_pem_file()
+    assert rsa_file.filepath_exists()
+
+
+def test_rsafile_get_key(rsa_file):
+    rsa_file.gen_pem_file()
+    assert rsa_file.get_key()
