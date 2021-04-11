@@ -1,7 +1,11 @@
 language: python
 python:
   - "3.6"      # current default Python on Travis CI
-  - "3.7"      # anything above 3.8 is broken with this error: "AttributeError: module 'time' has no attribute 'clock'""
+  - "3.7"
+  - "3.8"
+  - "3.9"
+  - "3.9-dev"  # 3.9 development branch
+  - "nightly"  # nightly build
 # command to install dependencies
 install:
   - pip install -r requirements.txt
