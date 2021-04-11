@@ -85,6 +85,7 @@ def test_basefile_str(base_file):
 
 def test_rsafile_gen_pem_file(rsa_file):
     rsa_file.gen_pem_file()
+    print("**************", rsa_file.get_filepath())
     assert rsa_file.filepath_exists()
 
 
