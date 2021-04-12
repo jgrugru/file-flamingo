@@ -21,7 +21,6 @@ setup(
     url = 'https://github.com/jgrugru/file-flamingo', 
     keywords = ["file", 'file abstraction', 'file functions', 'fileclass', 'class file', 'mixin'],
     install_requires=[
-        "pycrypto==2.6.1",
         "pycryptodome==3.10.1",
     ],
     include_package_data=True,
