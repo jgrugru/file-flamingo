@@ -11,7 +11,7 @@ README = (HERE / "README.md").read_text()
 setup(
     name = 'fileflamingo',         # How you named your package folder (MyLib)
     packages = find_packages(exclude=("tests",)),
-    version = '0.0.3',      # Start with a small number and increase it with every change you make
+    version = '0.0.4',      # Start with a small number and increase it with every change you make
     license='MIT',        # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     description = 'A suite of Python base classes that simplify interactions with files.',   # Give a short description about your library
     author = 'Jeff Gruenbaum',
@@ -19,7 +19,7 @@ setup(
     long_description=README,
     long_description_content_type="text/markdown",
     url = 'https://github.com/jgrugru/file-flamingo', 
-    keywords = ["file", 'file abstraction', 'file functions', 'fileclass', 'class file'],
+    keywords = ["file", 'file abstraction', 'file functions', 'fileclass', 'class file', 'mixin'],
     install_requires=[
         "pycrypto==2.6.1",
         "pycryptodome==3.10.1",
