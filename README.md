@@ -7,11 +7,11 @@ A suite of base classes that simplifies interactions with files.
 pip3 install fileflamingo
 ```
 
-* Summary
-* Base Classes
+* :orange_book: Summary
+* :books: Base Classes
   * [BaseFile](https://github.com/jgrugru/file-flamingo#BaseFile)
   * [EncryptionFile](https://github.com/jgrugru/file-flamingo#EncryptionFile)
-
+  * [RSAFile](https://github.com/jgrugru/file-flamingo#RSAFile)
 # BaseFile
 ```python
 BaseFile(filepath)
@@ -49,3 +49,12 @@ my_file.create_filepath()
 my_file.append_data_to_file("I am about to be encrypted.")
 my_file.encrypt()
 ```
+
+# RSAFile
+```python
+RSAFile(filepath)
+```
+Functions:
+- gen_key
+- gen_pem_file
+- get_key
