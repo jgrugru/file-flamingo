@@ -1,4 +1,4 @@
-![build status](https://travis-ci.com/jgrugru/file-flamingo.svg?branch=main)
+[![build status](https://travis-ci.com/jgrugru/file-flamingo.svg?branch=main)](https://travis-ci.com/jgrugru/file-flamingo)
 
 # file-flamingo
 A suite of base classes that simplifies interactions with files.
@@ -7,7 +7,6 @@ A suite of base classes that simplifies interactions with files.
 pip3 install fileflamingo
 ```
 
-* :orange_book: Summary
 * :books: Base Classes
   * [BaseFile](https://github.com/jgrugru/file-flamingo#BaseFile)
   * [EncryptionFile](https://github.com/jgrugru/file-flamingo#EncryptionFile)
