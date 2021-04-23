@@ -1,6 +1,8 @@
 from .BaseFile import BaseFile
 from .Encryptor import Encryptor
 
+line_separator = b'====='
+
 
 class EncryptionFile(BaseFile):
     """
@@ -23,9 +25,14 @@ class EncryptionFile(BaseFile):
         the data and write the text to the file.
         """
         if self.filepath_exists() and self.is_encrypted:
-            decrypted_data = self.encryptor.decrypt_data(
-                self.get_bytes_from_file())
-            self.write_data_to_file(decrypted_data)
+            file_lines = self.get_bytes_from_file().split(line_separator)
+            self.clear_file()
+
+            for line in file_lines:
+                if len(line):   # if line != b'', decrypt line
+                    decrypted_data = self.encryptor.decrypt_data(line)
+                    self.append_data_to_file(decrypted_data)
+                    self.append_data_to_file('\n')
             self.is_encrypted = False
         else:
             print(self.get_filepath() + " does not exist.")
@@ -37,9 +44,13 @@ class EncryptionFile(BaseFile):
         class and writes the bytes to the file.
         """
         if self.filepath_exists() and not self.is_encrypted:
-            encrypted_data = self.encryptor.encrypt_data(
-                self.get_contents_of_file())
-            self.write_bytes_to_file(encrypted_data)
+            file_lines = self.get_contents_of_file().split('\n')
+            self.clear_file()
+
+            for line in file_lines:
+                encrypted_data = self.encryptor.encrypt_data(line)
+                self.write_bytes_to_file(encrypted_data)
+                self.write_bytes_to_file(line_separator)
             self.is_encrypted = True
         else:
             print(self.get_filepath() + " does not exist.")
@@ -49,7 +60,7 @@ class EncryptionFile(BaseFile):
         Writes data to the file as bytes.
         """
         if self.filepath_exists():
-            with open(self.filepath, 'wb') as env_file:
+            with open(self.filepath, 'ab') as env_file:
                 env_file.write(data)
                 env_file.close()
         else:
