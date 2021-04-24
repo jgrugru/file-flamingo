@@ -1,6 +1,6 @@
 import sys
 from os import path, chdir
-from pytest import fixture, mark
+from pytest import fixture, mark, fail
 
 sys.path.append(path.abspath(path.join(path.dirname(__file__),
                 path.pardir)))
@@ -37,10 +37,10 @@ def rsa_file(tmp_path):
 
 @fixture
 def encryption_file(base_file_with_content, rsa_file):
-    my_encrpytion_file = EncryptionFile(
-        base_file_with_content.get_filepath(),
+    my_encrypytion_file = EncryptionFile(
+        base_file_with_content,
         rsa_file.get_filepath())
-    return my_encrpytion_file
+    return my_encrypytion_file
 
 
 @mark.parametrize("file_path, expected_result, is_file", [
@@ -77,16 +77,33 @@ def test_basefile_clear_file(base_file, base_file_with_content):
     assert base_file.is_empty()
 
 
+def test_basefile_clear_file_doesnt_create_file(tmp_path):
+    my_file = BaseFile(path.join(tmp_path, 'testing.txt'))
+    my_file.clear_file()
+    assert not my_file.filepath_exists()
+
+
 def test_basefile_str(base_file):
     assert base_file.get_filepath() == str(base_file)
 
 
 def test_encryptionfile_encrypt_and_decrypt(encryption_file):
     encryption_file.append_data_to_file("\nI am the second line.")
+    contents_before_encryption = encryption_file.get_contents_of_file()
     encryption_file.encrypt()
     assert encryption_file.is_binary()
     encryption_file.decrypt()
+    contents_after_encryption = encryption_file.get_contents_of_file()
     assert not encryption_file.is_binary()
+    assert contents_before_encryption == contents_after_encryption
+
+
+def test_encryptionfile_accepts_file_object_as_arguments(base_file, rsa_file):
+    try:
+        EncryptionFile(base_file, rsa_file)
+    except TypeError:
+        fail("Failed -- TypeError -- on \
+             test_encryptionfile_accepts_file_object_as_arguments.")
 
 
 def test_rsafile_gen_pem_file(rsa_file):
@@ -95,3 +112,5 @@ def test_rsafile_gen_pem_file(rsa_file):
 
 def test_rsafile_get_key(rsa_file):
     assert rsa_file.get_key()
+
+# setup tests for individual functions. Need more testing.

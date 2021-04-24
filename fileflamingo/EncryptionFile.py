@@ -1,7 +1,7 @@
 from .BaseFile import BaseFile
 from .Encryptor import Encryptor
 
-line_separator = b'====='
+line_separator = b'aJh@WDFWDg-#4jZr'
 
 
 class EncryptionFile(BaseFile):
@@ -10,12 +10,15 @@ class EncryptionFile(BaseFile):
     encrypt and decrypt the contents of the file. Constructor requires a
     filepath to an RSA key. The RSA key is passed to the Encryptor
     class which does the encryption and decryption.
+    Due to the size of the RSA key generated in RSAFile.py,
+    the max character count to be encrypted cannot be
+    greater than 240, so encryption is done line by line.
     """
 
     def __init__(self, filepath, rsa_filepath):
-        self.filepath = filepath
-        self.rsa_filepath = rsa_filepath
-        self.encryptor = Encryptor(str(rsa_filepath))
+        self.filepath = str(filepath)
+        self.rsa_filepath = str(rsa_filepath)
+        self.encryptor = Encryptor(self.rsa_filepath)
         self.is_encrypted = self.is_binary()
 
     def decrypt(self):
@@ -24,7 +27,7 @@ class EncryptionFile(BaseFile):
         then utilizes the Encryptor class to decrypt
         the data and write the text to the file.
         """
-        if self.filepath_exists() and self.is_encrypted:
+        if self.is_decryptable():
             file_lines = self.get_bytes_from_file().split(line_separator)
             self.clear_file()
 
@@ -33,6 +36,9 @@ class EncryptionFile(BaseFile):
                     decrypted_data = self.encryptor.decrypt_data(line)
                     self.append_data_to_file(decrypted_data)
                     self.append_data_to_file('\n')
+                else:
+                    stripped_contents = self.get_contents_of_file().strip()
+                    self.write_data_to_file(stripped_contents)
             self.is_encrypted = False
         else:
             print(self.get_filepath() + " does not exist.")
@@ -43,7 +49,7 @@ class EncryptionFile(BaseFile):
         then encrypts the contents through the Encryptor
         class and writes the bytes to the file.
         """
-        if self.filepath_exists() and not self.is_encrypted:
+        if self.is_encryptable():
             file_lines = self.get_contents_of_file().split('\n')
             self.clear_file()
 
@@ -75,3 +81,9 @@ class EncryptionFile(BaseFile):
         with open(self.filepath, 'rb') as my_file:
             data = my_file.read()
         return data
+
+    def is_decryptable(self):
+        return self.filepath_exists() and self.is_encrypted
+
+    def is_encryptable(self):
+        return self.filepath_exists() and not self.is_encrypted

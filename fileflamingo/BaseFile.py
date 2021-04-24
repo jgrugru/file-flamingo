@@ -84,7 +84,7 @@ class BaseFile():
 
     def is_binary(self):
         """
-        A simple method to determine if the file
+        A method to determine if the file
         is not a text file. If UnicodeDecodeError
         is thrown, it is not a text file. In our
         case, we are assuming it is a binary. This
@@ -111,14 +111,14 @@ class BaseFile():
         else:
             return False
 
-    def is_dir(self, verbose_flag=False):
+    def is_dir(self):
         """
         Utilizes the path(filepath).isdir() function
         from the os module.
         """
         return path.isdir(self.filepath)
 
-    def is_file(self, verbose_flage=False):
+    def is_file(self):
         """
         Utilizes the path(filepath).isfile() function
         from the os module.
