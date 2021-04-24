@@ -43,6 +43,10 @@ def encryption_file(base_file_with_content, rsa_file):
     return my_encrypytion_file
 
 
+@fixture
+def large_txt_file():
+    return BaseFile(path.abspath(path.join(path.dirname(__file__), 'test.txt')))
+
 @mark.parametrize("file_path, expected_result, is_file", [
     ("env_path/.env", True, True),
     ("./env_path/env", True, True),
@@ -97,6 +101,16 @@ def test_encryptionfile_encrypt_and_decrypt(encryption_file):
     assert not encryption_file.is_binary()
     assert contents_before_encryption == contents_after_encryption
 
+
+def test_large_encryption_file(large_txt_file, rsa_file):
+    encryption_file = EncryptionFile(large_txt_file, rsa_file)
+    contents_before_encryption = encryption_file.get_contents_of_file()
+    encryption_file.encrypt()
+    assert encryption_file.is_binary()
+    encryption_file.decrypt()
+    contents_after_encryption = encryption_file.get_contents_of_file()
+    assert not encryption_file.is_binary()
+    assert contents_before_encryption == contents_after_encryption
 
 def test_encryptionfile_accepts_file_object_as_arguments(base_file, rsa_file):
     try:
