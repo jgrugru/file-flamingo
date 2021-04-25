@@ -13,7 +13,7 @@ class RSAFile(BaseFile):
     """
 
     def __init__(self, filepath):
-        self.filepath = filepath
+        super().__init__(str(filepath))
 
     def gen_key(self):
         """

@@ -1,4 +1,5 @@
-from os import path, remove, stat, makedirs
+from os import path, remove, stat, makedirs, strerror
+from errno import ENOENT
 
 
 class BaseFile():
@@ -9,8 +10,9 @@ class BaseFile():
     hardcoded.
     """
 
-    def __init__(self, filepath):
-        self.filepath = filepath
+    def __init__(self, filepath):  # add a parameter that accepts
+        self.filepath = filepath   # and adds contents to file.
+        self.is_encrypted = self.is_binary()
 
     def set_filepath(self, filepath):
         self.filepath = filepath
@@ -34,14 +36,28 @@ class BaseFile():
     def delete_file(self):
         """
         Utilizes the remove method from the os module.
-        Checks if the filepath exists and that the path
-        is not a dir before deleting.
+        Only deletes files. If file is not found a
+        FileNotFoundError is raised. If the filepath
+        is a directory, a IsADirectoryError is raised.
+        """
+        remove(self.filepath)
+
+    def clear_file(self):
+        """
+        Checks if the file exists before truncating
+        the file. Performs an open, write, close which
+        clears all the contents.
         """
         if self.filepath_exists() and self.is_file():
-            remove(self.filepath)
-        else:
-            print("The file could not be deleted because "
-                  + self.filepath + " does not exist or it is a directory.")
+            open(self.filepath, 'w').close()
+        elif not self.filepath_exists():
+            raise FileNotFoundError(ENOENT,
+                                    strerror(ENOENT),
+                                    self.filepath)
+        elif not self.is_file():
+            raise IsADirectoryError(ENOENT,
+                                    strerror(ENOENT),
+                                    self.filepath)
 
     def get_contents_of_file(self):
         """
@@ -70,18 +86,6 @@ class BaseFile():
             f.write(data)
             f.close()
 
-    def clear_file(self):
-        """
-        Checks if the file exists before truncating
-        the file. Performs an open, write, close which
-        clears all the contents.
-        """
-        if self.filepath_exists():
-            open(self.filepath, 'w').close()
-        else:
-            print("The file could not be cleared because "
-                  + self.filepath + " does not exist.")
-
     def is_binary(self):
         """
         A method to determine if the file
@@ -99,6 +103,8 @@ class BaseFile():
         except UnicodeDecodeError:
             return True
         except FileNotFoundError:
+            return False
+        except IsADirectoryError:
             return False
         return False
 
@@ -133,6 +139,12 @@ class BaseFile():
             return True
         else:
             return False
+
+    def is_decryptable(self):
+        return self.filepath_exists() and self.is_encrypted
+
+    def is_encryptable(self):
+        return self.filepath_exists() and not self.is_encrypted
 
     def __str__(self):
         return self.filepath

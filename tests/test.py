@@ -45,46 +45,95 @@ def encryption_file(base_file_with_content, rsa_file):
 
 @fixture
 def large_txt_file():
-    return BaseFile(path.abspath(path.join(path.dirname(__file__), 'test.txt')))
+    return BaseFile(path.abspath(path.join(path.dirname(__file__),
+                    'test.txt')))
 
-@mark.parametrize("file_path, expected_result, is_file", [
-    ("env_path/.env", True, True),
-    ("./env_path/env", True, True),
-    (".env_path/env", True, True),
-    ("env_path/env/", True, False),
-    (".env_path/env/", True, False),
-    ("././././env/", True, False),
-    ("././././env", True, True),
-    ("../env_path/.env", True, True),
-    ("../env_path1/.env/", True, False),
+
+@mark.parametrize("file_path, is_file", [
+    ("env_path/.env", True),
+    ("./env_path/env", True),
+    (".env_path/env", True),
+    ("env_path/env/", False),
+    (".env_path/env/", False),
+    ("././././env/", False),
+    ("././././env", True),
+    ("../env_path/.env", True),
+    ("../env_path1/.env/", False),
 ])
-def test_basefile_create_and_delete_filepath(env_setup_for_file_object,
-                                             file_path,
-                                             expected_result,
-                                             is_file):
+def test_basefile_create_filepath(env_setup_for_file_object,
+                                  file_path,
+                                  is_file):
     my_file = BaseFile(file_path)
     my_file.create_filepath()
-    assert my_file.filepath_exists() == expected_result
-    assert path.isfile(my_file.get_filepath()) == is_file
-    my_file.delete_file()
-    assert my_file.filepath_exists() != is_file
+    assert my_file.filepath_exists()
+    assert my_file.is_file() == is_file
 
 
-def test_basefile_get_contents_of_text_file(base_file_with_content):
-    assert base_file_with_content.get_contents_of_file() == '0123456789'
+@mark.parametrize("file_path, exception_raised", [
+    ("env_path/.env", False),
+    ("./env_path/env", False),
+    (".env_path/env", False),
+    ("env_path/env/", True),
+    (".env_path/env/", True),
+    ("././././env/", True),
+    ("././././env", False),
+    ("../env_path/.env", False),
+    ("../env_path1/.env/", True),
+])
+def test_basefile_delete_filepath(env_setup_for_file_object,
+                                  file_path,
+                                  exception_raised):
+    my_file = BaseFile(file_path)
+    my_file.create_filepath()
+
+    was_exception_raised = False
+    try:
+        my_file.delete_file()
+    except FileNotFoundError:
+        was_exception_raised = True
+    except IsADirectoryError:
+        was_exception_raised = True
+
+    assert was_exception_raised == exception_raised
 
 
-def test_basefile_clear_file(base_file, base_file_with_content):
-    base_file_with_content.clear_file()
-    assert base_file_with_content.is_empty()
-    base_file.clear_file()
-    assert base_file.is_empty()
+@mark.parametrize("file_path, create_filepath, exception_raised", [
+    ("env_path/.env", True, False),
+    ("env_path/.env/", True, True),
+    ("env_path/.env", False, True),
+])
+def test_basefile_clear_file(env_setup_for_file_object,
+                             create_filepath,
+                             file_path,
+                             exception_raised):
+    my_file = BaseFile(file_path)
+    if create_filepath:
+        my_file.create_filepath()
+
+    was_exception_raised = False
+    try:
+        my_file.clear_file()
+    except FileNotFoundError:
+        was_exception_raised = True
+    except IsADirectoryError:
+        was_exception_raised = True
+
+    assert was_exception_raised == exception_raised
 
 
 def test_basefile_clear_file_doesnt_create_file(tmp_path):
     my_file = BaseFile(path.join(tmp_path, 'testing.txt'))
-    my_file.clear_file()
+    try:
+        my_file.clear_file()
+    except FileNotFoundError:
+        pass
+    except IsADirectoryError:
+        pass
     assert not my_file.filepath_exists()
+
+
+def test_basefile_get_contents_of_text_file(base_file_with_content):
+    assert base_file_with_content.get_contents_of_file() == '0123456789'
 
 
 def test_basefile_str(base_file):
@@ -112,6 +161,7 @@ def test_large_encryption_file(large_txt_file, rsa_file):
     assert not encryption_file.is_binary()
     assert contents_before_encryption == contents_after_encryption
 
+
 def test_encryptionfile_accepts_file_object_as_arguments(base_file, rsa_file):
     try:
         EncryptionFile(base_file, rsa_file)
@@ -128,3 +178,4 @@ def test_rsafile_get_key(rsa_file):
     assert rsa_file.get_key()
 
 # setup tests for individual functions. Need more testing.
+# setup Mark.parametrize for encrypt and decrypt functions.

@@ -16,10 +16,9 @@ class EncryptionFile(BaseFile):
     """
 
     def __init__(self, filepath, rsa_filepath):
-        self.filepath = str(filepath)
+        super().__init__(str(filepath))
         self.rsa_filepath = str(rsa_filepath)
         self.encryptor = Encryptor(self.rsa_filepath)
-        self.is_encrypted = self.is_binary()
 
     def decrypt(self):
         """
@@ -81,9 +80,3 @@ class EncryptionFile(BaseFile):
         with open(self.filepath, 'rb') as my_file:
             data = my_file.read()
         return data
-
-    def is_decryptable(self):
-        return self.filepath_exists() and self.is_encrypted
-
-    def is_encryptable(self):
-        return self.filepath_exists() and not self.is_encrypted
