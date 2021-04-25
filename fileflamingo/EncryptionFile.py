@@ -33,11 +33,11 @@ class EncryptionFile(BaseFile):
             for line in file_lines:
                 if len(line):   # if line != b'', decrypt line
                     decrypted_data = self.encryptor.decrypt_data(line)
-                    self.append_data_to_file(decrypted_data)
-                    self.append_data_to_file('\n')
+                    self.append_text_to_file(decrypted_data)
+                    self.append_text_to_file('\n')
                 else:
                     stripped_contents = self.get_contents_of_file().strip()
-                    self.write_data_to_file(stripped_contents)
+                    self.write_text_to_file(stripped_contents)
             self.is_encrypted = False
         else:
             print(self.get_filepath() + " does not exist.")

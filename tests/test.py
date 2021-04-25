@@ -19,7 +19,7 @@ def base_file(tmp_path):
 
 @fixture
 def base_file_with_content(base_file):
-    base_file.append_data_to_file("0123456789")
+    base_file.append_text_to_file("0123456789")
     return base_file
 
 
@@ -141,7 +141,7 @@ def test_basefile_str(base_file):
 
 
 def test_encryptionfile_encrypt_and_decrypt(encryption_file):
-    encryption_file.append_data_to_file("\nI am the second line.")
+    encryption_file.append_text_to_file("\nI am the second line.")
     contents_before_encryption = encryption_file.get_contents_of_file()
     encryption_file.encrypt()
     assert encryption_file.is_binary()

@@ -1,5 +1,4 @@
-from os import path, remove, stat, makedirs, strerror
-from errno import ENOENT
+from os import path, remove, stat, makedirs
 
 
 class BaseFile():
@@ -7,7 +6,7 @@ class BaseFile():
     Base file class that can be utilized by any
     object that represents a file. The class is
     initialized with a filepath, either relative or
-    hardcoded.
+    absolute.
     """
 
     def __init__(self, filepath):  # add a parameter that accepts
@@ -22,7 +21,7 @@ class BaseFile():
 
     def create_filepath(self):
         """
-        Creates filepaths for both dirs and files.
+        Creates filepath for both dirs and files.
         First creates the directory paths and then tries
         to create the filepath if the filepath is a file.
         """
@@ -44,20 +43,13 @@ class BaseFile():
 
     def clear_file(self):
         """
-        Checks if the file exists before truncating
-        the file. Performs an open, write, close which
-        clears all the contents.
+        Utilizes the file truncate() function.
+        If file is not found a FileNotFoundError
+        is raised. If the filepath is a directory,
+        a IsADirectoryError is raised.
         """
-        if self.filepath_exists() and self.is_file():
-            open(self.filepath, 'w').close()
-        elif not self.filepath_exists():
-            raise FileNotFoundError(ENOENT,
-                                    strerror(ENOENT),
-                                    self.filepath)
-        elif not self.is_file():
-            raise IsADirectoryError(ENOENT,
-                                    strerror(ENOENT),
-                                    self.filepath)
+        with open(self.filepath, 'r+') as f:
+            f.truncate()
 
     def get_contents_of_file(self):
         """
@@ -68,16 +60,17 @@ class BaseFile():
             data = my_file.read()
         return data
 
-    def append_data_to_file(self, data):
+    def append_text_to_file(self, data):
         """
-        Appends text to the file. Does not delete
+        Creates file if it does not exist and
+        appends text to the file. Does not delete
         the file or clear the contents.
         """
         with open(self.filepath, 'a') as f:
             f.write(data)
             f.close()
 
-    def write_data_to_file(self, data):
+    def write_text_to_file(self, data):
         """
         Truncates the file and writes the
         data as text.
