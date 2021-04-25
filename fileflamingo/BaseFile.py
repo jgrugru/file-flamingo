@@ -54,6 +54,8 @@ class BaseFile():
     def get_contents_of_file(self):
         """
         Returns all the text read from the file.
+        If the file is not text, it will return
+        UnicodeDecodeError.
         """
         data = None
         with open(self.filepath, 'r') as my_file:
@@ -88,7 +90,8 @@ class BaseFile():
         method is called at the initialization of
         EncryptionFile, so it needs to work when
         the file does not exist, hence the
-        FileNotFoundError.
+        FileNotFoundError. This function will return
+        False if the file is a directory.
         """
         try:
             with open(self.filepath, "r") as f:
@@ -101,9 +104,12 @@ class BaseFile():
             return False
         return False
 
-    def is_empty(self, verbose_flag=False):
+    def is_empty(self):
         """
-        Returns boolean if size of file is 0.
+        Returns False if size of file is 0.
+        If the self.filepath is a directory,
+        the function return 4096, which returns
+        True.
         """
         if stat(self.filepath).st_size == 0:
             return True
@@ -134,9 +140,17 @@ class BaseFile():
             return False
 
     def is_decryptable(self):
+        """
+        Determines if filepath exists and the file
+        is a binary.
+        """
         return self.filepath_exists() and self.is_encrypted
 
     def is_encryptable(self):
+        """
+        Determines if filepath exists and the file is not
+        a binary.
+        """
         return self.filepath_exists() and not self.is_encrypted
 
     def __str__(self):
