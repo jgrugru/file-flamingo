@@ -12,8 +12,7 @@ from fileflamingo.EncryptionFile import EncryptionFile  # noqa: E402
 
 @fixture
 def base_file(tmp_path):
-    my_file = BaseFile(path.join(tmp_path, 'env', '.env'))
-    my_file.create_filepath()
+    my_file = create_file(path.join(tmp_path, 'env', '.env'))
     return my_file
 
 
@@ -49,6 +48,12 @@ def large_txt_file():
                     'test.txt')))
 
 
+def create_file(filepath):
+    my_file = BaseFile(filepath)
+    my_file.create_filepath()
+    return my_file
+
+
 @mark.parametrize("file_path, is_file", [
     ("env_path/.env", True),
     ("./env_path/env", True),
@@ -63,8 +68,7 @@ def large_txt_file():
 def test_basefile_create_filepath(env_setup_for_file_object,
                                   file_path,
                                   is_file):
-    my_file = BaseFile(file_path)
-    my_file.create_filepath()
+    my_file = create_file(file_path)
     assert my_file.filepath_exists()
     assert my_file.is_file() == is_file
 
@@ -83,8 +87,7 @@ def test_basefile_create_filepath(env_setup_for_file_object,
 def test_basefile_delete_filepath(env_setup_for_file_object,
                                   file_path,
                                   exception_raised):
-    my_file = BaseFile(file_path)
-    my_file.create_filepath()
+    my_file = create_file(file_path)
 
     was_exception_raised = False
     try:
