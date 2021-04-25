@@ -1,5 +1,6 @@
 from .BaseFile import BaseFile
 
+
 class TextFile(BaseFile):
 
     def __init__(self, filepath, txt=None):

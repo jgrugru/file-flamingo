@@ -8,12 +8,19 @@ sys.path.append(path.abspath(path.join(path.dirname(__file__),
 from fileflamingo.BaseFile import BaseFile              # noqa: E402
 from fileflamingo.RSAFile import RSAFile                # noqa: E402
 from fileflamingo.EncryptionFile import EncryptionFile  # noqa: E402
+from fileflamingo.TextFile import TextFile              # noqa: E402
 
 
 @fixture
 def base_file(tmp_path):
-    my_file = create_file(path.join(tmp_path, 'env', '.env'))
+    my_file = create_base_file(path.join(tmp_path, 'test.txt'))
     return my_file
+
+
+@fixture
+def text_file(tmp_path):
+    filepath = path.join(tmp_path, 'test.txt')
+    return TextFile(filepath, txt="0123456789")
 
 
 @fixture
@@ -48,7 +55,7 @@ def large_txt_file():
                     'test.txt')))
 
 
-def create_file(filepath):
+def create_base_file(filepath):
     my_file = BaseFile(filepath)
     my_file.create_filepath()
     return my_file
@@ -68,7 +75,7 @@ def create_file(filepath):
 def test_basefile_create_filepath(env_setup_for_file_object,
                                   file_path,
                                   is_file):
-    my_file = create_file(file_path)
+    my_file = create_base_file(file_path)
     assert my_file.filepath_exists()
     assert my_file.is_file() == is_file
 
@@ -87,7 +94,7 @@ def test_basefile_create_filepath(env_setup_for_file_object,
 def test_basefile_delete_filepath(env_setup_for_file_object,
                                   file_path,
                                   exception_raised):
-    my_file = create_file(file_path)
+    my_file = create_base_file(file_path)
 
     was_exception_raised = False
     try:
@@ -179,6 +186,11 @@ def test_rsafile_gen_pem_file(rsa_file):
 
 def test_rsafile_get_key(rsa_file):
     assert rsa_file.get_key()
+
+
+def test_text_file_init(text_file):
+    assert text_file.filepath_exists()
+    assert text_file.get_contents_of_file() == "0123456789"
 
 # setup tests for individual functions. Need more testing.
 # setup Mark.parametrize for encrypt and decrypt functions.

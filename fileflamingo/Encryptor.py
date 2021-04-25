@@ -1,7 +1,5 @@
 from Crypto.Cipher import PKCS1_v1_5 as Cipher_PKCS1_v1_5
 from Crypto.PublicKey import RSA
-from os import path, strerror
-from errno import ENOENT
 
 
 class Encryptor():
