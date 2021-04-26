@@ -144,14 +144,20 @@ class BaseFile():
         Determines if filepath exists and the file
         is a binary.
         """
-        return self.filepath_exists() and self.is_encrypted
+        if self.is_dir():
+            return False
+        else:
+            return self.filepath_exists() and self.is_encrypted
 
     def is_encryptable(self):
         """
         Determines if filepath exists and the file is not
         a binary.
         """
-        return self.filepath_exists() and not self.is_encrypted
+        if self.is_dir():
+            return False
+        else:
+            return self.filepath_exists() and not self.is_encrypted
 
     def __str__(self):
         return self.filepath
