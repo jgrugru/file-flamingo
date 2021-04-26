@@ -1,0 +1,19 @@
+USERNAME=12351234123412351351236123541234
+HOME=/home/vivek
+vivek@nas01:~$ env
+TERM=xterm-256color
+SHELL=/bin/bash
+XDG_SESSION_COOKIE=9ee90112ba2cb349f07bfe2f00002e46-1381581541.324726-906214463
+SSH_CLIENT=192.168.1.6 60190 22
+SSH_TTY=/dev/pts/1
+USER=vivek
+MAIL=/var/mail/vivek
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games
+PWD=/home/vivek
+LANG=en_IN
+SHLVL=1
+HOME=/home/vivek
+LANGUAGE=en_IN:en
+LOGNAME=vivek
+SSH_CONNECTION=192.168.1.6 60190 192.168.1.10 22
+_=/usr/bin/env

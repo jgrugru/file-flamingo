@@ -11,7 +11,7 @@ class Encryptor():
     """
 
     def __init__(self, rsa_filepath):
-        self.pem_key = self.get_key(rsa_filepath)
+        self.pem_key = self.get_key(str(rsa_filepath))
 
     def encrypt_data(self, data):
         cipher = Cipher_PKCS1_v1_5.new(self.pem_key)

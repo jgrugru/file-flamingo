@@ -1,6 +1,8 @@
 import sys
 from os import path, chdir
 from pytest import fixture, mark, fail
+from random import choice
+from string import ascii_uppercase
 
 sys.path.append(path.abspath(path.join(path.dirname(__file__),
                 path.pardir)))
@@ -9,6 +11,8 @@ from fileflamingo.BaseFile import BaseFile              # noqa: E402
 from fileflamingo.RSAFile import RSAFile                # noqa: E402
 from fileflamingo.EncryptionFile import EncryptionFile  # noqa: E402
 from fileflamingo.TextFile import TextFile              # noqa: E402
+from fileflamingo.Encryptor import Encryptor            # noqa: E402
+
 
 TEST_FILE_LIST = [
     "env_path/.env",
@@ -21,11 +25,23 @@ TEST_FILE_LIST = [
     "../env_path/.env",
     "../env_path1/.env/"]
 
+CONTENTS_OF_TEXT_FILE = "USERNAME=JGRUGRU\nPASSWORD=12341515134$@#$^"
+
+ENCRYPT_CHAR_LIMIT = 245
+
 
 def create_file(fileclass, filepath, *args, **kwargs):
     my_file = fileclass(filepath, *args, **kwargs)
     my_file.create_filepath()
     return my_file
+
+
+def str_factory(str_size):
+    return ''.join(choice(ascii_uppercase) for i in range(str_size))
+
+
+def encrypted_bytes_generator(encryptor, str_to_encrypt):
+    return encryptor.encrypt_data(str_to_encrypt)
 
 
 @fixture
@@ -39,7 +55,7 @@ def text_file(tmp_path):
     my_file = create_file(
         TextFile,
         path.join(tmp_path, 'test.txt'),
-        txt="0123456789")
+        txt=CONTENTS_OF_TEXT_FILE)
     return my_file
 
 
@@ -48,6 +64,11 @@ def rsa_file(tmp_path):
     my_rsa_file = create_file(RSAFile, path.join(tmp_path, 'my_key.pem'))
     my_rsa_file.gen_pem_file()
     return my_rsa_file
+
+
+@fixture
+def encryptor(rsa_file):
+    return Encryptor(rsa_file)
 
 
 @fixture
@@ -62,7 +83,7 @@ def encryption_file(text_file, rsa_file):
 @fixture
 def large_txt_file():
     return BaseFile(path.abspath(path.join(path.dirname(__file__),
-                    'test.txt')))
+                    'test_env.txt')))
 
 
 @fixture
@@ -132,9 +153,7 @@ def test_basefile_clear_file(env_setup_for_file_object,
     was_exception_raised = False
     try:
         my_file.clear_file()
-    except FileNotFoundError:
-        was_exception_raised = True
-    except IsADirectoryError:
+    except (FileNotFoundError, IsADirectoryError):
         was_exception_raised = True
 
     assert was_exception_raised == exception_raised
@@ -144,23 +163,64 @@ def test_basefile_clear_file_doesnt_create_file(tmp_path):
     my_file = BaseFile(path.join(tmp_path, 'testing.txt'))
     try:
         my_file.clear_file()
-    except FileNotFoundError:
-        pass
-    except IsADirectoryError:
+    except (FileNotFoundError, IsADirectoryError):
         pass
     assert not my_file.filepath_exists()
 
 
 def test_basefile_get_contents_of_text_file(text_file):
-    assert text_file.get_contents_of_file() == '0123456789'
+    assert text_file.get_contents_of_file() == CONTENTS_OF_TEXT_FILE
 
 
 def test_basefile_str(base_file):
     assert base_file.get_filepath() == str(base_file)
 
 
+@mark.parametrize("str_to_encrypt, exception_raised", [
+    (str_factory(ENCRYPT_CHAR_LIMIT), False),  # why is this the limit?
+    ("USERNAME=" + str_factory(236), False),
+    ("PASSWORD=" + "aJh@WDFWDg-#4jZr" + str_factory(100), False),
+    ("TESTING=" + "aJh@WDFWDg-#4jZr" + str_factory(250), True),
+])
+def test_encryptor_encrypt_and_decrypt_data(encryptor,
+                                            str_to_encrypt,
+                                            exception_raised):
+    was_exception_raised = False
+    try:
+        data = encryptor.encrypt_data(str_to_encrypt)
+    except ValueError:
+        was_exception_raised = True
+    if not was_exception_raised:
+        assert isinstance(data, bytes)
+    assert was_exception_raised == exception_raised
+
+
+@mark.parametrize("original_str, is_decryptable", [
+    (str_factory(ENCRYPT_CHAR_LIMIT), False),
+    (str_factory(ENCRYPT_CHAR_LIMIT), True),
+    (str_factory(140), True),
+    (str_factory(1), True),
+    ('0', True),
+    ("aJh@WDFWDg-#4jZr", True),
+])
+def test_encryptor_decrypt_and_decrypt_data(encryptor,
+                                            original_str,
+                                            is_decryptable):
+    if is_decryptable:
+        str_to_decrypt = encrypted_bytes_generator(encryptor, original_str)
+    else:
+        str_to_decrypt = str.encode(original_str)
+    was_exception_raised = False
+    try:
+        data = encryptor.decrypt_data(str_to_decrypt)
+    except ValueError:
+        was_exception_raised = True
+    if not was_exception_raised:
+        assert data == original_str
+    assert was_exception_raised != is_decryptable
+
+
 def test_encryptionfile_encrypt_and_decrypt(encryption_file):
-    encryption_file.append_text_to_file("\nI am the second line.")
     contents_before_encryption = encryption_file.get_contents_of_file()
     encryption_file.encrypt()
     assert encryption_file.is_binary()
@@ -181,6 +241,28 @@ def test_large_encryption_file(large_txt_file, rsa_file):
     assert contents_before_encryption == contents_after_encryption
 
 
+@mark.parametrize("random_bytes, exception_raised", [
+    (str_factory(ENCRYPT_CHAR_LIMIT), True),
+    (str.encode(str_factory(140)), False),
+    (str.encode(str_factory(ENCRYPT_CHAR_LIMIT * 3)), False),
+    (b"aJh@WDFWDg-#4jZr", False),
+])
+def test_encryptionfile_write_and_get_bytes(encryption_file,
+                                            random_bytes,
+                                            exception_raised):
+    encryption_file.clear_file()
+    was_exception_raised = False
+    try:
+        encryption_file.write_bytes_to_file(random_bytes)
+    except TypeError:
+        was_exception_raised = True
+
+    if not was_exception_raised:
+        assert random_bytes == encryption_file.get_bytes_from_file()
+
+    assert was_exception_raised == exception_raised
+
+
 def test_encryptionfile_accepts_file_object_as_arguments(base_file, rsa_file):
     try:
         EncryptionFile(base_file, rsa_file)
@@ -199,4 +281,4 @@ def test_rsafile_get_key(rsa_file):
 
 def test_text_file_init(text_file):
     assert text_file.filepath_exists()
-    assert text_file.get_contents_of_file() == "0123456789"
+    assert text_file.get_contents_of_file() == CONTENTS_OF_TEXT_FILE

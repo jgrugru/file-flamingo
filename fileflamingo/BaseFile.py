@@ -141,6 +141,7 @@ class BaseFile():
 
     def is_decryptable(self):
         """
+        If filepath is a dir, returns False.
         Determines if filepath exists and the file
         is a binary.
         """
@@ -151,6 +152,7 @@ class BaseFile():
 
     def is_encryptable(self):
         """
+        If filepath is a dir, returns False.
         Determines if filepath exists and the file is not
         a binary.
         """
