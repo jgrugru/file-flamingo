@@ -223,13 +223,15 @@ def test_encryptor_decrypt_and_decrypt_data(encryptor,
 @mark.parametrize("str_to_encrypt, exception_raised", [
     (str_factory(ENCRYPT_CHAR_LIMIT)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
-        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), True),
-    (str_factory(140), True),
-    (str_factory(1), True),
-    ('0', True),
-    ("aJh@WDFWDg-#4jZr", True),
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), False),
+    (str_factory(140), False),
+    (str_factory(1), False),
+    ('0', False),
+    (str_factory(100) + "aJh@WDFWDg-#4jZr" + str_factory(10)
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), False),
     (open(path.abspath(
-        path.join(path.dirname(__file__), 'test_env.txt')), "r").read(), True),
+        path.join(path.dirname(__file__), 'test_env.txt')), "r").read(), False),
 ])
 def test_encryptionfile_encrypt_decrypt_file(tmp_path,
                                              rsa_file,
