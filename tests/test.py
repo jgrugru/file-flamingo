@@ -220,25 +220,35 @@ def test_encryptor_decrypt_and_decrypt_data(encryptor,
     assert was_exception_raised != is_decryptable
 
 
-def test_encryptionfile_encrypt_and_decrypt(encryption_file):
-    contents_before_encryption = encryption_file.get_contents_of_file()
+@mark.parametrize("str_to_encrypt, exception_raised", [
+    (str_factory(ENCRYPT_CHAR_LIMIT)
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), True),
+    (str_factory(140), True),
+    (str_factory(1), True),
+    ('0', True),
+    ("aJh@WDFWDg-#4jZr", True),
+    (open(path.abspath(
+        path.join(path.dirname(__file__), 'test_env.txt')), "r").read(), True),
+])
+def test_encryptionfile_encrypt_decrypt_file(tmp_path,
+                                             rsa_file,
+                                             str_to_encrypt,
+                                             exception_raised):
+    txt_file = create_file(
+        TextFile,
+        path.join(tmp_path, 'test.txt'),
+        txt=str_to_encrypt)
+    encryption_file = create_file(
+        EncryptionFile,
+        txt_file,
+        rsa_file)
     encryption_file.encrypt()
     assert encryption_file.is_binary()
     encryption_file.decrypt()
     contents_after_encryption = encryption_file.get_contents_of_file()
     assert not encryption_file.is_binary()
-    assert contents_before_encryption == contents_after_encryption
-
-
-def test_large_encryption_file(large_txt_file, rsa_file):
-    encryption_file = EncryptionFile(large_txt_file, rsa_file)
-    contents_before_encryption = encryption_file.get_contents_of_file()
-    encryption_file.encrypt()
-    assert encryption_file.is_binary()
-    encryption_file.decrypt()
-    contents_after_encryption = encryption_file.get_contents_of_file()
-    assert not encryption_file.is_binary()
-    assert contents_before_encryption == contents_after_encryption
+    assert str_to_encrypt == contents_after_encryption
 
 
 @mark.parametrize("random_bytes, exception_raised", [
