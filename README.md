@@ -43,17 +43,28 @@ I am about to be encrypted.
 BaseFile(filepath)
 ```
 Functions:
-- get_contents_of_file (only works with text)
 - create_filepath (either a file or a dir)
 - delete_file (only works on files, not dirs)
-- append_data_to_file
-- write_data_to_file
 - clear_file
+- get_contents_of_file (only works with text)
+- append_text_to_file
+- write_text_to_file
 - is_binary
 - is_empty
 - is_dir
 - is_file
+  is_decryptable
+  is_encryptable
 - filepath_exists
+
+# TextFile
+```python
+TextFile(filepath, txt="This is added to the file.")
+```
+The TextFile does not add functionality but allows the user
+to create text files with content at initialization.
+The _txt_ is appended to the file, so if the file already
+exists, the text is appended.
 
 # EncryptionFile
 ```python
