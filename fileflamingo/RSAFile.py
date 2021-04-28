@@ -15,11 +15,11 @@ class RSAFile(BaseFile):
     def __init__(self, filepath):
         super().__init__(str(filepath))
 
-    def gen_key(self):
+    def gen_key(self, size=2048):
         """
         Generates the RSA key.
         """
-        return RSA.generate(2048)
+        return RSA.generate(size)
 
     def gen_pem_file(self):
         """

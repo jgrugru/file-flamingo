@@ -4,8 +4,9 @@ from pytest import fixture, mark, fail
 from random import choice
 from string import ascii_uppercase
 
-sys.path.append(path.abspath(path.join(path.dirname(__file__),
-                path.pardir)))
+PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
+
+sys.path.append(PARENT_DIR)
 
 from fileflamingo.BaseFile import BaseFile              # noqa: E402
 from fileflamingo.RSAFile import RSAFile                # noqa: E402
@@ -129,9 +130,7 @@ def test_basefile_delete_filepath(env_setup_for_file_object,
     was_exception_raised = False
     try:
         my_file.delete_file()
-    except FileNotFoundError:
-        was_exception_raised = True
-    except IsADirectoryError:
+    except (FileNotFoundError, IsADirectoryError):
         was_exception_raised = True
 
     assert was_exception_raised == exception_raised
@@ -231,7 +230,7 @@ def test_encryptor_decrypt_and_decrypt_data(encryptor,
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), False),
     (open(path.abspath(
-        path.join(path.dirname(__file__), 'test_env.txt')), "r").read(), False),
+        path.join(PARENT_DIR, 'tests/test_env.txt')), "r").read(), False),
 ])
 def test_encryptionfile_encrypt_decrypt_file(tmp_path,
                                              rsa_file,

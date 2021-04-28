@@ -98,9 +98,7 @@ class BaseFile():
                 f.read()
         except UnicodeDecodeError:
             return True
-        except FileNotFoundError:
-            return False
-        except IsADirectoryError:
+        except (FileNotFoundError, IsADirectoryError):
             return False
         return False
 
@@ -108,7 +106,7 @@ class BaseFile():
         """
         Returns False if size of file is 0.
         If the self.filepath is a directory,
-        the function return 4096, which returns
+        the stat function returns 4096, which returns
         True.
         """
         if stat(self.filepath).st_size == 0:
