@@ -75,9 +75,10 @@ class BaseFile():
         appends text to the file. Does not delete
         the file or clear the contents.
         """
-        with open(self.filepath, 'a') as f:
-            f.write(data)
-            f.close()
+        if data:
+            with open(self.filepath, 'a') as f:
+                f.write(data)
+                f.close()
 
     def write_text_to_file(self, data):
         """

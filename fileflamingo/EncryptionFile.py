@@ -20,43 +20,91 @@ class EncryptionFile(BaseFile):
         self.rsa_filepath = str(rsa_filepath)
         self.encryptor = Encryptor(self.rsa_filepath)
 
-    def encrypt(self, no_write=False):
+    def encrypt(self):
         """
         Checks that the file is not encrypted and exists,
         then encrypts the contents through the Encryptor
         class and writes the bytes to the file.
         """
         if self.is_encryptable():
-            file_lines = self.get_lines_and_clear_file(self.get_lines_as_list_from_text_file)
-
-            for line in file_lines:
-                line = self.clean_line(line)
-                encrypted_data = self.encrypt_line(line)
-                self.write_to_file_by_line(encrypted_data, self.write_bytes_to_file, line_separator)
+            encrypted_file_lines = self.get_encrypted_lines_as_list()
+            self.clear_file()
+            self.write_file_lines_to_file(encrypted_file_lines,
+                                          self.append_bytes_to_file,
+                                          line_separator)
             self.is_encrypted = True
         else:
             print(self.get_filepath() + " does not exist.")
 
-    def decrypt(self, no_write=False):
+    def decrypt(self):
         """
         Checks if the file is encrypted and exists,
         then utilizes the Encryptor class to decrypt
         the data and write the text to the file.
         """
         if self.is_decryptable():
-            file_lines = self.get_lines_and_clear_file(self.get_lines_as_list_from_bytes_file)
-
-            for line in file_lines:
-                if len(line):   # if line != b'', decrypt line
-                    decrypted_data = self.decrypt_line(line)
-                    self.write_to_file_by_line(decrypted_data, self.append_text_to_file, '\n')
-                else:
-                    self.write_text_to_file(self.get_contents_of_file().strip())
+            decrypted_file_lines = self.get_decrypted_lines_as_list()
+            self.clear_file()
+            self.write_file_lines_to_file(decrypted_file_lines,
+                                          self.append_text_to_file,
+                                          '\n')
+            self.write_text_to_file(self.get_contents_of_file().strip())
             self.is_encrypted = False
         else:
             print(self.get_filepath() + " does not exist.")
 
+    def get_encrypted_lines_as_list(self):
+        """
+        Grabs the lines from the text file as a list and
+        then encrypts each item in the list and returns
+        the encrypted items in a new list.
+        """
+        file_lines = self.get_lines_as_list_from_text_file()
+        encrypted_file_lines = self.encrypt_decrypt_file_lines(
+                file_lines, self.encrypt_line)
+        return encrypted_file_lines
+
+    def get_decrypted_lines_as_list(self):
+        """
+        Grabs the lines from the binary file as a list and
+        then decrypts each item in the list and returns
+        the decrypted items in a new list.
+        """
+        file_lines = self.get_lines_as_list_from_bytes_file()
+        decrypted_file_lines = self.encrypt_decrypt_file_lines(
+                    file_lines, self.decrypt_line)
+        return decrypted_file_lines
+
+    def encrypt_line(self, line):
+        """
+        Before returning the encrypted line, the line
+        is stripped to remove any whitespace.
+        """
+        clean_line = line.strip()
+        return self.encryptor.encrypt_data(clean_line)
+
+    def decrypt_line(self, line):
+        """
+        Returns the decrypted line if the line != b''.
+        If line == b'' / len(line) == 0, returns None.
+        """
+        if len(line):
+            return self.encryptor.decrypt_data(line)
+        else:
+            return None
+
     def write_bytes_to_file(self, data):
+        """
+        Writes data to the file as bytes.
+        """
+        if self.filepath_exists():
+            with open(self.filepath, 'wb') as env_file:
+                env_file.write(data)
+                env_file.close()
+        else:
+            print(self.get_filepath() + " does not exist.")
+
+    def append_bytes_to_file(self, data):
         """
         Writes data to the file as bytes.
         """
@@ -78,26 +126,36 @@ class EncryptionFile(BaseFile):
         return data
 
     def get_lines_as_list_from_bytes_file(self):
+        """
+        Returns a list of bytes in the file
+        split at the line_separator.
+        """
         return self.get_bytes_from_file().split(line_separator)
 
-    def clean_line(self, line):
+    def encrypt_decrypt_file_lines(self, file_lines, encrypt_or_decrypt_fn):
         """
-        Strip the line of whitespace at the beginning and end.
-        This is function is called before being encrypted.
+        Accepts a file_lines list and creates a new list with
+        the contents either encrypted or decrypted. 
+        encrypt_or_decrypt_fn accepts functions encrypt_line
+        and decrypt_line.
         """
-        return line.strip()
+        lines_list = []
+        for line in file_lines:
+            new_line = encrypt_or_decrypt_fn(line)
+            lines_list.append(new_line)
+        return lines_list
 
-    def write_to_file_by_line(self, data, write_to_file_fn, line_separator):
-        write_to_file_fn(data)
-        write_to_file_fn(line_separator)
+    def write_file_lines_to_file(self,
+                                 file_lines,
+                                 write_to_file_fn,
+                                 line_separator):
+        """
+        Accepts file_lines list either encrypted or decrypted. Loops
+        through the list and writes a line to the file followed by
+        the line_separator. Acceptable functions passed in are
+        append_bytes_to_file and append_text_to_file.
 
-    def get_lines_and_clear_file(self, get_lines_fn):
-        file_lines = get_lines_fn()
-        self.clear_file()
-        return file_lines
-
-    def encrypt_line(self, line):
-        return self.encryptor.encrypt_data(line)
-
-    def decrypt_line(self, line):
-        return self.encryptor.decrypt_data(line)
+        """
+        for line in file_lines:
+            write_to_file_fn(line)
+            write_to_file_fn(line_separator)
