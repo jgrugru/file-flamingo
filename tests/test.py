@@ -229,6 +229,7 @@ def test_encryptor_decrypt_and_decrypt_data(encryptor,
     (' test=12345 \n test1=12345 \n', 'test=12345\ntest1=12345'),
     (str_factory(1), None),
     ('0', None),
+    ('', None),
     (str_factory(100) + "aJh@WDFWDg-#4jZr" + str_factory(10)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), None),
