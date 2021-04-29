@@ -20,28 +20,6 @@ class EncryptionFile(BaseFile):
         self.rsa_filepath = str(rsa_filepath)
         self.encryptor = Encryptor(self.rsa_filepath)
 
-    def decrypt(self):
-        """
-        Checks if the file is encrypted and exists,
-        then utilizes the Encryptor class to decrypt
-        the data and write the text to the file.
-        """
-        if self.is_decryptable():
-            file_lines = self.get_bytes_from_file().split(line_separator)
-            self.clear_file()
-
-            for line in file_lines:
-                if len(line):   # if line != b'', decrypt line
-                    decrypted_data = self.encryptor.decrypt_data(line)
-                    self.append_text_to_file(decrypted_data)
-                    self.append_text_to_file('\n')
-                else:
-                    stripped_contents = self.get_contents_of_file().strip()
-                    self.write_text_to_file(stripped_contents)
-            self.is_encrypted = False
-        else:
-            print(self.get_filepath() + " does not exist.")
-
     def encrypt(self):
         """
         Checks that the file is not encrypted and exists,
@@ -49,14 +27,34 @@ class EncryptionFile(BaseFile):
         class and writes the bytes to the file.
         """
         if self.is_encryptable():
-            file_lines = self.get_contents_of_file().split('\n')
+            file_lines = self.get_lines_as_list_from_text_file()
             self.clear_file()
 
             for line in file_lines:
+                line = self.clean_line(line)
                 encrypted_data = self.encryptor.encrypt_data(line)
-                self.write_bytes_to_file(encrypted_data)
-                self.write_bytes_to_file(line_separator)
+                self.write_to_file_by_line(encrypted_data, self.write_bytes_to_file, line_separator)
             self.is_encrypted = True
+        else:
+            print(self.get_filepath() + " does not exist.")
+
+    def decrypt(self):
+        """
+        Checks if the file is encrypted and exists,
+        then utilizes the Encryptor class to decrypt
+        the data and write the text to the file.
+        """
+        if self.is_decryptable():
+            file_lines = self.get_lines_as_list_from_bytes_file()
+            self.clear_file()
+
+            for count, line in enumerate(file_lines):
+                if len(line):   # if line != b'', decrypt line
+                    decrypted_data = self.encryptor.decrypt_data(line)
+                    self.write_to_file_by_line(decrypted_data, self.append_text_to_file, '\n')
+                else:
+                    self.write_text_to_file(self.get_contents_of_file().strip())
+            self.is_encrypted = False
         else:
             print(self.get_filepath() + " does not exist.")
 
@@ -80,3 +78,13 @@ class EncryptionFile(BaseFile):
         with open(self.filepath, 'rb') as my_file:
             data = my_file.read()
         return data
+
+    def get_lines_as_list_from_bytes_file(self):
+        return self.get_bytes_from_file().split(line_separator)
+
+    def clean_line(self, line):
+        return line.strip()
+
+    def write_to_file_by_line(self, data, write_to_file_fn, line_separator):
+        write_to_file_fn(data)
+        write_to_file_fn(line_separator)

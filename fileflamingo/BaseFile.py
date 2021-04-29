@@ -62,6 +62,13 @@ class BaseFile():
             data = my_file.read()
         return data
 
+    def get_lines_as_list_from_text_file(self):
+        """
+        Returns all the lines from the text file
+        as a list.
+        """
+        return self.get_contents_of_file().split('\n')
+
     def append_text_to_file(self, data):
         """
         Creates file if it does not exist and

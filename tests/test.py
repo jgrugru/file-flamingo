@@ -219,23 +219,26 @@ def test_encryptor_decrypt_and_decrypt_data(encryptor,
     assert was_exception_raised != is_decryptable
 
 
-@mark.parametrize("str_to_encrypt, exception_raised", [
+@mark.parametrize("str_to_encrypt, expected_output", [
     (str_factory(ENCRYPT_CHAR_LIMIT)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
-        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), False),
-    (str_factory(140), False),
-    (str_factory(1), False),
-    ('0', False),
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), None),
+    (str_factory(140), None),
+    ('\n\n\n\n\n\n\n\n', ''),
+    ('\t\t\t\t\t\t\n\n\n', ''),
+    (' test=12345 \n test1=12345 \n', 'test=12345\ntest1=12345'),
+    (str_factory(1), None),
+    ('0', None),
     (str_factory(100) + "aJh@WDFWDg-#4jZr" + str_factory(10)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
-        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), False),
+        + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), None),
     (open(path.abspath(
-        path.join(PARENT_DIR, 'tests/test_env.txt')), "r").read(), False),
+        path.join(PARENT_DIR, 'tests/test_env.txt')), "r").read(), None),
 ])
 def test_encryptionfile_encrypt_decrypt_file(tmp_path,
                                              rsa_file,
                                              str_to_encrypt,
-                                             exception_raised):
+                                             expected_output):
     txt_file = create_file(
         TextFile,
         path.join(tmp_path, 'test.txt'),
@@ -249,7 +252,10 @@ def test_encryptionfile_encrypt_decrypt_file(tmp_path,
     encryption_file.decrypt()
     contents_after_encryption = encryption_file.get_contents_of_file()
     assert not encryption_file.is_binary()
-    assert str_to_encrypt == contents_after_encryption
+    if isinstance(expected_output, str):
+        assert expected_output == contents_after_encryption
+    else:
+        assert str_to_encrypt == contents_after_encryption
 
 
 @mark.parametrize("random_bytes, exception_raised", [
