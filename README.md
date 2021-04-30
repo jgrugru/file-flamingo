@@ -9,7 +9,7 @@ pip3 install fileflamingo
 
 * :books: Base Classes
   * [BaseFile](https://github.com/jgrugru/file-flamingo#BaseFile)
-  * [TextFile](https://github.com/jgrugru/file-flamingo/blob/main/fileflamingo/TextFile.py)
+  * [TextFile](https://github.com/jgrugru/file-flamingo#TextFile)
   * [EncryptionFile](https://github.com/jgrugru/file-flamingo#EncryptionFile)
   * [RSAFile](https://github.com/jgrugru/file-flamingo#RSAFile)
 
