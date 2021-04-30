@@ -10,6 +10,7 @@ pip3 install fileflamingo
 * :books: Base Classes
   * [BaseFile](https://github.com/jgrugru/file-flamingo#BaseFile)
   * [TextFile](https://github.com/jgrugru/file-flamingo#TextFile)
+  * [ByteFile](https://github.com/jgrugru/file-flamingo#ByteFile)
   * [EncryptionFile](https://github.com/jgrugru/file-flamingo#EncryptionFile)
   * [RSAFile](https://github.com/jgrugru/file-flamingo#RSAFile)
 
@@ -47,10 +48,6 @@ Functions:
 - create_filepath (either a file or a dir)
 - delete_file (only works on files, not dirs)
 - clear_file
-- get_contents_of_file (only works with text)
-- get_lines_as_list_from_text_file
-- append_text_to_file
-- write_text_to_file
 - is_binary
 - is_empty
 - is_dir
@@ -63,10 +60,23 @@ Functions:
 ```python
 TextFile(filepath, txt="This is added to the file.")
 ```
-The TextFile does not add functionality but allows the user
-to create text files with content at initialization.
-The _txt_ is appended to the file, so if the file already
-exists, the text is appended.
+Functions:
+- write_text_to_file
+- append_text_to_file
+- append_text_line_to_file
+- get_contents_of_file
+- get_text_lines_as_list
+
+# ByteFile
+```python
+ByteFile(filepath)
+```
+Functions:
+- write_bytes_to_file
+- write_byte_line_to_file
+- append_bytes_to_file
+- get_bytes_from_file
+- get_lines_as_list_from_bytes_file
 
 # EncryptionFile
 ```python
@@ -79,13 +89,7 @@ Functions:
 - get_decrypted_lines_as_list
 - encrypt_line
 - decrypt_line
-- write_bytes_to_file
-- append_bytes_to_file
-- get_bytes_from_file
-- get_lines_as_list_from_bytes_file
-- encrypt_decrypt_file_lines
-- write_file_lines_to_file
-
+- map_file_lines
 
 # RSAFile
 ```python

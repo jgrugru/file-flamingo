@@ -51,17 +51,6 @@ class BaseFile():
         with open(self.filepath, 'r+') as f:
             f.truncate()
 
-    def get_contents_of_file(self):
-        """
-        Returns all the text read from the file.
-        If the file is not text, it will return
-        UnicodeDecodeError.
-        """
-        data = None
-        with open(self.filepath, 'r') as my_file:
-            data = my_file.read()
-        return data
-
     def is_binary(self):
         """
         A method to determine if the file

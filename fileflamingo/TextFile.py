@@ -16,12 +16,14 @@ class TextFile(BaseFile):
         if txt:
             self.append_text_to_file(txt)
 
-    def get_text_lines_as_list(self):
+    def write_text_to_file(self, data):
         """
-        Returns all the lines from the text file
-        as a list.
+        Truncates the file and writes the
+        data as text.
         """
-        return self.get_contents_of_file().split('\n')
+        with open(self.filepath, 'w') as f:
+            f.write(data)
+            f.close()
 
     def append_text_to_file(self, data):
         """
@@ -33,15 +35,28 @@ class TextFile(BaseFile):
             f.write(data)
             f.close()
 
-    def write_text_to_file(self, data):
-        """
-        Truncates the file and writes the
-        data as text.
-        """
-        with open(self.filepath, 'w') as f:
-            f.write(data)
-            f.close()
-
     def append_text_line_to_file(self, file_line):
+        """
+        Appends the line to the file followed
+        by a new line.
+        """
         self.append_text_to_file(file_line)
         self.append_text_to_file('\n')
+
+    def get_contents_of_file(self):
+        """
+        Returns all the text read from the file.
+        If the file is not text, it will return
+        UnicodeDecodeError.
+        """
+        data = None
+        with open(self.filepath, 'r') as my_file:
+            data = my_file.read()
+        return data
+
+    def get_text_lines_as_list(self):
+        """
+        Returns all the lines from the text file
+        as a list.
+        """
+        return self.get_contents_of_file().split('\n')
