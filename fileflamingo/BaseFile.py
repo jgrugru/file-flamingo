@@ -62,33 +62,6 @@ class BaseFile():
             data = my_file.read()
         return data
 
-    def get_lines_as_list_from_text_file(self):
-        """
-        Returns all the lines from the text file
-        as a list.
-        """
-        return self.get_contents_of_file().split('\n')
-
-    def append_text_to_file(self, data):
-        """
-        Creates file if it does not exist and
-        appends text to the file. Does not delete
-        the file or clear the contents.
-        """
-        if data:
-            with open(self.filepath, 'a') as f:
-                f.write(data)
-                f.close()
-
-    def write_text_to_file(self, data):
-        """
-        Truncates the file and writes the
-        data as text.
-        """
-        with open(self.filepath, 'w') as f:
-            f.write(data)
-            f.close()
-
     def is_binary(self):
         """
         A method to determine if the file

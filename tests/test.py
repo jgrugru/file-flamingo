@@ -300,3 +300,8 @@ def test_rsafile_get_key(rsa_file):
 def test_text_file_init(text_file):
     assert text_file.filepath_exists()
     assert text_file.get_contents_of_file() == CONTENTS_OF_TEXT_FILE
+
+
+def test_textfile_get_text_lines_as_list(text_file):
+    my_list = text_file.get_text_lines_as_list()
+    assert my_list == ['USERNAME=JGRUGRU', 'PASSWORD=12341515134$@#$^']
