@@ -1,4 +1,5 @@
 from .BaseFile import BaseFile
+from .FileLines import clean_elements_of_whitespace
 
 
 class TextFile(BaseFile):
@@ -23,7 +24,11 @@ class TextFile(BaseFile):
         """
         with open(self.filepath, 'w') as f:
             f.write(data)
-            f.close()
+
+    # def write_text_lines_to_file(self, file_lines):
+    #     self.clear_file()
+    #     file_lines = clean_elements_of_whitespace(file_lines)
+    #     print("**********", file_lines)
 
     def append_text_to_file(self, data):
         """
@@ -33,7 +38,6 @@ class TextFile(BaseFile):
         """
         with open(self.filepath, 'a') as f:
             f.write(data)
-            f.close()
 
     def append_text_line_to_file(self, file_line):
         """
@@ -60,3 +64,8 @@ class TextFile(BaseFile):
         as a list.
         """
         return self.get_contents_of_file().split('\n')
+
+    def clean_lines_of_whitespace(self):
+        file_lines = self.get_text_lines_as_list()
+        file_lines = clean_elements_of_whitespace(file_lines)
+        self.write_text_to_file('\n'.join(file_lines))
