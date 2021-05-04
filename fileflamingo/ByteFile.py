@@ -1,7 +1,15 @@
+from .BaseFile import BaseFile
+
 line_separator = b'aJh@WDFWDg-#4jZr'
 
 
-class ByteFile():
+class ByteFile(BaseFile):
+    """
+    ByteFile inherits from the base BaseFile class.
+    This class can be used to represent
+    a binary file. The functions in the class
+    allow the user to read/write bytes to the file.
+    """
     def __init__(self, filepath):
         super().__init__(str(filepath))
 
@@ -9,16 +17,13 @@ class ByteFile():
         """
         Writes data to the file as bytes.
         """
-        if self.filepath_exists():
-            with open(self.filepath, 'wb') as env_file:
-                env_file.write(data)
-                env_file.close()
-        else:
-            print(self.get_filepath() + " does not exist.")
+        with open(self.filepath, 'wb') as env_file:
+            env_file.write(data)
+            env_file.close()
 
-    def write_byte_line_to_file(self, file_line):
+    def append_byte_line_to_file(self, file_line):
         """
-        Writes bytes to the file followed by
+        Appends bytes to the file followed by
         the line_separator.
         """
         self.append_bytes_to_file(file_line)
@@ -29,23 +34,20 @@ class ByteFile():
         Appends data to the file as bytes.
         Creates file if it does not exist.
         """
-        if self.filepath_exists():
-            with open(self.filepath, 'ab') as env_file:
-                env_file.write(data)
-                env_file.close()
-        else:
-            print(self.get_filepath() + " does not exist.")
+        with open(self.filepath, 'ab') as env_file:
+            env_file.write(data)
+            env_file.close()
 
     def get_bytes_from_file(self):
         """
         Returns the bytes read from the file.
         """
-        data = None
+        # data = None
         with open(self.filepath, 'rb') as my_file:
             data = my_file.read()
         return data
 
-    def get_lines_as_list_from_byte_file(self):
+    def get_byte_lines_as_list(self):
         """
         Returns a list of bytes in the file
         split at the line_separator.

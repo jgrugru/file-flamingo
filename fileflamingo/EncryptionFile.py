@@ -31,14 +31,15 @@ class EncryptionFile(TextFile, ByteFile):
             encrypted_file_lines = self.encrypt_text_lines()
             self.clear_file()
             map_file_lines(encrypted_file_lines,
-                                self.write_byte_line_to_file)
+                           self.append_byte_line_to_file)
             self.is_encrypted = True
         else:
-            print(self.get_filepath() + " does not exist.")
+            print(self.get_filepath() + " does not exist or is \
+                  not encryptable.")
 
     def decrypt(self):
         """
-        Checks if the file is encrypted and exists,
+        Checks if the file is decryptable,
         then utilizes the Encryptor class to decrypt
         the data and write the text to the file.
         """
@@ -46,17 +47,18 @@ class EncryptionFile(TextFile, ByteFile):
             decrypted_file_lines = self.decrypt_byte_lines()
             self.clear_file()
             map_file_lines(decrypted_file_lines,
-                                self.append_text_line_to_file)
+                           self.append_text_line_to_file)
             self.write_text_to_file(self.get_contents_of_file().strip())
             self.is_encrypted = False
         else:
-            print(self.get_filepath() + " does not exist.")
+            print(self.get_filepath() + " does not exist or is \
+                  not encryptable.")
 
     def encrypt_text_lines(self):
         """
-        Grabs the lines from the text file as a list and
-        then encrypts each item in the list and returns
-        the encrypted items in a new list.
+        Grabs the file lines from the text file as a list.
+        Then encrypts each line in the list and returns
+        the encrypted file lines in a new list.
         """
         file_lines = self.get_text_lines_as_list()
         encrypted_file_lines = map_file_lines(file_lines,
@@ -65,11 +67,11 @@ class EncryptionFile(TextFile, ByteFile):
 
     def decrypt_byte_lines(self):
         """
-        Grabs the lines from the binary file as a list and
-        then decrypts each item in the list and returns
-        the decrypted items in a new list.
+        Grabs the byte lines from the byte file as a list.
+        Then decrypts each line in the list and returns
+        the decrypted file lines in a new list.
         """
-        file_lines = self.get_lines_as_list_from_byte_file()
+        file_lines = self.get_byte_lines_as_list()
         decrypted_file_lines = map_file_lines(file_lines,
                                               self.decrypt_line)
         decrypted_file_lines.remove(None)
@@ -86,7 +88,9 @@ class EncryptionFile(TextFile, ByteFile):
     def decrypt_line(self, line):
         """
         Returns the decrypted line if the line != b''.
-        If line == b'' / len(line) == 0, returns None.
+        If line == b'', the function returns None.
+        This is accomplished through the boolean
+        expression len(line) == 0.
         """
         if len(line):
             return self.encryptor.decrypt_data(line)

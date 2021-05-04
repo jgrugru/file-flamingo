@@ -1,5 +1,8 @@
-# This file should never store data, purely functional
-# programming
+"""
+This file will hold all the helper functions that
+can be used to manipulate file lines. The functions
+will all return a list and accept a list as an argument.
+"""
 
 
 def strip_elements_of_list(file_lines):
@@ -26,6 +29,7 @@ def clean_elements_of_whitespace(file_lines):
     file_lines = strip_elements_of_list(file_lines)
     file_lines = remove_whitespace_elements(file_lines)
     return file_lines
+
 
 def map_file_lines(file_lines, fn):
     """

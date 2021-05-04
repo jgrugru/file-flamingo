@@ -77,7 +77,7 @@ class BaseFile():
         Returns False if size of file is 0.
         If the self.filepath is a directory,
         the stat function returns 4096, which returns
-        True.
+        False.
         """
         if stat(self.filepath).st_size == 0:
             return True
@@ -86,14 +86,14 @@ class BaseFile():
 
     def is_dir(self):
         """
-        Utilizes the path(filepath).isdir() function
+        Utilizes the os.path.isdir() function
         from the os module.
         """
         return path.isdir(self.filepath)
 
     def is_file(self):
         """
-        Utilizes the path(filepath).isfile() function
+        Utilizes the os.path.isfile() function
         from the os module.
         """
         return path.isfile(self.filepath)
