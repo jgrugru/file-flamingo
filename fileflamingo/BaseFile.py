@@ -25,7 +25,14 @@ class BaseFile():
         First creates the directory paths and then tries
         to create the filepath if the filepath is a file.
         """
-        makedirs(path.dirname(self.filepath), exist_ok=True)
+        tail_head_tuple = path.split(self.filepath)
+        if tail_head_tuple[0] == '':
+            self.create_file()
+        else:
+            makedirs(path.dirname(self.filepath), exist_ok=True)
+            self.create_file()
+
+    def create_file(self):
         try:
             with open(self.filepath, "a") as f:
                 f.write("")

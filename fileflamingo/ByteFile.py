@@ -19,7 +19,6 @@ class ByteFile(BaseFile):
         """
         with open(self.filepath, 'wb') as env_file:
             env_file.write(data)
-            env_file.close()
 
     def append_byte_line_to_file(self, file_line):
         """
@@ -36,7 +35,6 @@ class ByteFile(BaseFile):
         """
         with open(self.filepath, 'ab') as env_file:
             env_file.write(data)
-            env_file.close()
 
     def get_bytes_from_file(self):
         """

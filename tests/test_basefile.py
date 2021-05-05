@@ -6,6 +6,8 @@ PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
 
 syspath.append(PARENT_DIR)
 
+from fileflamingo.ByteFile import ByteFile  # noqa: E402
+from tests.fixtures import create_file  # noqa: E402
 from tests.fixtures import create_base_file  # noqa: E402
 from tests.fixtures import base_file, text_file  # noqa: F401, E402
 from tests.fixtures import env_setup_for_file_object  # noqa: F401, E402
@@ -23,6 +25,7 @@ from tests.fixtures import TEST_FILE_LIST  # noqa: E402
     (TEST_FILE_LIST[6], True),
     (TEST_FILE_LIST[7], True),
     (TEST_FILE_LIST[8], False),
+    (TEST_FILE_LIST[9], True),
 ])
 def test_basefile_create_filepath(env_setup_for_file_object,  # noqa: F811
                                   file_path,
@@ -42,6 +45,8 @@ def test_basefile_create_filepath(env_setup_for_file_object,  # noqa: F811
     (TEST_FILE_LIST[6], False),
     (TEST_FILE_LIST[7], False),
     (TEST_FILE_LIST[8], True),
+    (TEST_FILE_LIST[9], False),
+
 ])
 def test_basefile_delete_filepath(env_setup_for_file_object,   # noqa: F811
                                   file_path,
@@ -85,6 +90,28 @@ def test_basefile_clear_file_doesnt_create_file(tmp_path):
     except (FileNotFoundError, IsADirectoryError):
         pass
     assert not my_file.filepath_exists()
+
+
+@mark.parametrize("file_path, contents_of_file, \
+                  creates_file, expected_output", [
+    (TEST_FILE_LIST[0], None, True, False),
+    (TEST_FILE_LIST[3], None, True, False),
+    (TEST_FILE_LIST[0], None, False, False),
+    (TEST_FILE_LIST[0], b'\x00\x01\xffsd', True, True),
+])
+def test_basefile_is_binary(env_setup_for_file_object,   # noqa: F811
+                            file_path,
+                            creates_file,
+                            contents_of_file,
+                            expected_output):
+    my_file = create_file(ByteFile, file_path)
+    if creates_file:
+        my_file.create_filepath()
+    if contents_of_file:
+        my_file.write_bytes_to_file(contents_of_file)
+    result = my_file.is_binary()
+
+    assert result == expected_output
 
 
 def test_basefile_get_contents_of_text_file(text_file):  # noqa: F811

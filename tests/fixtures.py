@@ -25,7 +25,9 @@ TEST_FILE_LIST = [
     "././././env/",
     "././././env",
     "../env_path/.env",
-    "../env_path1/.env/"]
+    "../env_path1/.env/",
+    "env.txt",
+]
 
 TEST_FILE_LINE_LIST = [
     ['', 'asdfasd', '\n', 'asdfadsf\n'],
