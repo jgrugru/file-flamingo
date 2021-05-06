@@ -45,8 +45,8 @@ I am about to be encrypted.
 BaseFile(filepath)
 ```
 Functions:
-- create_filepath (either a file or a dir)
-- delete_file (only works on files, not dirs)
+- create_filepath
+- delete_file
 - clear_file
 - is_binary
 - is_empty
@@ -66,6 +66,7 @@ Functions:
 - append_text_line_to_file
 - get_contents_of_file
 - get_text_lines_as_list
+- clean_lines_of_whitespace
 
 # ByteFile
 ```python
@@ -73,10 +74,10 @@ ByteFile(filepath)
 ```
 Functions:
 - write_bytes_to_file
-- write_byte_line_to_file
+- append_byte_line_to_file
 - append_bytes_to_file
 - get_bytes_from_file
-- get_lines_as_list_from_bytes_file
+- get_byte_lines_as_list
 
 # EncryptionFile
 ```python
@@ -85,11 +86,10 @@ EncryptionFile(filepath, rsa_filepath)
 Functions:
 - encrypt
 - decrypt
-- get_encrypted_lines_as_list
-- get_decrypted_lines_as_list
+- encrypt_text_lines
+- decrypt_byte_lines
 - encrypt_line
 - decrypt_line
-- map_file_lines
 
 # RSAFile
 ```python
@@ -99,3 +99,11 @@ Functions:
 - gen_key
 - gen_pem_file
 - get_key
+
+# FileLines (File holds helper functions for dealing with file lines stored in a list)
+
+Functions:
+- strip_elements_of_list
+- remove_whitespace_elements
+- clean_elements_of_whitespace
+- map_file_lines
