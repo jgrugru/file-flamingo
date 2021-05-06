@@ -3,6 +3,7 @@ from os import path, chdir
 from pytest import fixture
 from random import choice
 from string import ascii_uppercase
+from random import randint
 
 PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
 
@@ -25,7 +26,7 @@ TEST_FILE_LIST = [
     "././././env/",
     "././././env",
     "../env_path/.env",
-    "../env_path1/.env/",
+    "./env_path1/.env/",
     "env.txt",
 ]
 
@@ -54,6 +55,13 @@ def create_base_file(filepath, create_filepath=True):
     my_file = BaseFile(filepath)
     if create_filepath:
         my_file.create_filepath()
+    return my_file
+
+
+def create_text_file_with_random_str(filepath):
+    my_file = TextFile(filepath, txt=str_factory(randint(1, 240)))
+    my_file.create_filepath()
+    # my_file.append_text_to_file(str_factory(randint(1, 240)))
     return my_file
 
 

@@ -9,6 +9,7 @@ syspath.append(PARENT_DIR)
 from fileflamingo.ByteFile import ByteFile  # noqa: E402
 from tests.fixtures import create_file  # noqa: E402
 from tests.fixtures import create_base_file  # noqa: E402
+from tests.fixtures import create_text_file_with_random_str  # noqa: E402
 from tests.fixtures import base_file, text_file  # noqa: F401, E402
 from tests.fixtures import env_setup_for_file_object  # noqa: F401, E402
 from tests.fixtures import CONTENTS_OF_TEXT_FILE  # noqa: E402
@@ -112,6 +113,53 @@ def test_basefile_is_binary(env_setup_for_file_object,   # noqa: F811
     result = my_file.is_binary()
 
     assert result == expected_output
+
+
+@mark.parametrize("filepath, expected_result", [
+    (TEST_FILE_LIST[0], False),
+    (TEST_FILE_LIST[1], False),
+    (TEST_FILE_LIST[2], False),
+    (TEST_FILE_LIST[3], True),
+    (TEST_FILE_LIST[4], True),
+    (TEST_FILE_LIST[5], True),
+    (TEST_FILE_LIST[6], False),
+    (TEST_FILE_LIST[7], False),
+    (TEST_FILE_LIST[8], True),
+    (TEST_FILE_LIST[9], False),
+
+])
+def test_basefile_is_empty(env_setup_for_file_object,   # noqa: F811
+                           filepath,
+                           expected_result):
+    result = False
+    try:
+        my_file = create_text_file_with_random_str(filepath)
+        result = my_file.is_empty()
+    except IsADirectoryError:
+        expected_result = False
+    assert result == expected_result
+
+
+@mark.parametrize("filepath, create_file, expected_result", [
+    (TEST_FILE_LIST[0], True, True),
+    (TEST_FILE_LIST[1], True, True),
+    (TEST_FILE_LIST[2], True, True),
+    (TEST_FILE_LIST[3], True, True),
+    (TEST_FILE_LIST[4], False, False),
+    (TEST_FILE_LIST[5], True, True),
+    (TEST_FILE_LIST[6], True, True),
+    (TEST_FILE_LIST[7], True, True),
+    (TEST_FILE_LIST[8], False, False),
+    (TEST_FILE_LIST[9], True, True),
+
+])
+def test_basefile_filepath_exists(env_setup_for_file_object,   # noqa: F811
+                                  create_file,
+                                  filepath,
+                                  expected_result):
+    my_file = create_base_file(filepath, create_filepath=create_file)
+    result = my_file.filepath_exists()
+    assert result == expected_result
 
 
 def test_basefile_get_contents_of_text_file(text_file):  # noqa: F811

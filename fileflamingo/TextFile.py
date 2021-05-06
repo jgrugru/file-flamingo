@@ -17,6 +17,7 @@ class TextFile(BaseFile):
     def __init__(self, filepath, txt=None):
         super().__init__(str(filepath))
         if txt:
+            self.create_filepath()
             self.append_text_to_file(txt)
 
     def write_text_to_file(self, data):
@@ -26,11 +27,6 @@ class TextFile(BaseFile):
         """
         with open(self.filepath, 'w') as f:
             f.write(data)
-
-    # def write_text_lines_to_file(self, file_lines):
-    #     self.clear_file()
-    #     file_lines = clean_elements_of_whitespace(file_lines)
-    #     print("**********", file_lines)
 
     def append_text_to_file(self, data):
         """

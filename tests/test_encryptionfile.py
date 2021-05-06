@@ -73,7 +73,7 @@ def test_encryptor_decrypt_and_decrypt_data(encryptor,  # noqa: F811
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT)
         + '\n' + str_factory(ENCRYPT_CHAR_LIMIT), None),
     (open(path.abspath(
-        path.join(PARENT_DIR, 'tests/test_env.txt')), "r").read(), None),
+        path.join(PARENT_DIR, 'tests/etc/test_env.txt')), "r").read(), None),
 ])
 def test_encryptionfile_encrypt_decrypt_file(tmp_path,
                                              rsa_file,  # noqa: F811
