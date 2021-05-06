@@ -33,14 +33,13 @@ class ByteFile(BaseFile):
         Appends data to the file as bytes.
         Creates file if it does not exist.
         """
-        with open(self.filepath, 'ab') as env_file:
+        with open(self.filepath, 'ab+') as env_file:
             env_file.write(data)
 
     def get_bytes_from_file(self):
         """
         Returns the bytes read from the file.
         """
-        # data = None
         with open(self.filepath, 'rb') as my_file:
             data = my_file.read()
         return data

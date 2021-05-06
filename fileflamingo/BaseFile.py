@@ -33,6 +33,11 @@ class BaseFile():
             self.create_file()
 
     def create_file(self):
+        """
+        Creates a single file. Will not work
+        if there are parent directories or if the filepath
+        is a directory.
+        """
         try:
             with open(self.filepath, "a") as f:
                 f.write("")
@@ -123,7 +128,7 @@ class BaseFile():
         if self.is_dir():
             return False
         else:
-            return self.filepath_exists() and self.is_encrypted
+            return self.filepath_exists() and self.is_binary()
 
     def is_encryptable(self):
         """
@@ -134,7 +139,7 @@ class BaseFile():
         if self.is_dir():
             return False
         else:
-            return self.filepath_exists() and not self.is_encrypted
+            return self.filepath_exists() and not self.is_binary()
 
     def __str__(self):
         return self.filepath

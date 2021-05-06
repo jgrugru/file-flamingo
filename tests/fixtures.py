@@ -10,6 +10,7 @@ PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
 syspath.append(PARENT_DIR)
 
 from fileflamingo.BaseFile import BaseFile              # noqa: E402
+from fileflamingo.ByteFile import ByteFile                # noqa: E402
 from fileflamingo.RSAFile import RSAFile                # noqa: E402
 from fileflamingo.EncryptionFile import EncryptionFile  # noqa: E402
 from fileflamingo.TextFile import TextFile              # noqa: E402
@@ -60,8 +61,13 @@ def create_base_file(filepath, create_filepath=True):
 
 def create_text_file_with_random_str(filepath):
     my_file = TextFile(filepath, txt=str_factory(randint(1, 240)))
+    return my_file
+
+
+def create_byte_file_with_random_bytes(filepath, text_str):
+    my_file = ByteFile(filepath)
     my_file.create_filepath()
-    # my_file.append_text_to_file(str_factory(randint(1, 240)))
+    my_file.append_bytes_to_file(text_str)
     return my_file
 
 
