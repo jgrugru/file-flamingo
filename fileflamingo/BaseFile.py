@@ -164,7 +164,6 @@ class BaseFile():
         """
         return list(map(fn, file_lines))
 
-    @staticmethod
     def clean_elements_of_whitespace(self, file_lines):
         """
         Removes all unnecessary whitespace from the list.
