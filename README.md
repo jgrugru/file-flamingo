@@ -56,6 +56,12 @@ Functions:
 - is_decryptable
 - is_encryptable
 
+Static Methods:
+- strip_elements_of_list
+- remove_whitespace_elements
+- clean_elements_of_whitespace
+- map_file_lines
+
 # TextFile
 ```python
 TextFile(filepath, txt="This is added to the file.")
@@ -99,12 +105,3 @@ Functions:
 - gen_key
 - gen_pem_file
 - get_key
-
-# FileLines
-FileLines holds helper functions for dealing with file lines stored in a list.
-
-Functions:
-- strip_elements_of_list
-- remove_whitespace_elements
-- clean_elements_of_whitespace
-- map_file_lines

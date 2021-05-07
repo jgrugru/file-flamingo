@@ -1,7 +1,7 @@
 from .TextFile import TextFile
 from .ByteFile import ByteFile
 from .Encryptor import Encryptor
-from .FileLines import map_file_lines
+# from .FileLines import map_file_lines
 
 
 class EncryptionFile(TextFile, ByteFile):
@@ -30,8 +30,8 @@ class EncryptionFile(TextFile, ByteFile):
         if self.is_encryptable():
             encrypted_file_lines = self.encrypt_text_lines()
             self.clear_file()
-            map_file_lines(encrypted_file_lines,
-                           self.append_byte_line_to_file)
+            self.map_file_lines(encrypted_file_lines,
+                                self.append_byte_line_to_file)
             self.is_encrypted = True
         else:
             print(self.get_filepath() + " does not exist or is \
@@ -46,8 +46,8 @@ class EncryptionFile(TextFile, ByteFile):
         if self.is_decryptable():
             decrypted_file_lines = self.decrypt_byte_lines()
             self.clear_file()
-            map_file_lines(decrypted_file_lines,
-                           self.append_text_line_to_file)
+            self.map_file_lines(decrypted_file_lines,
+                                self.append_text_line_to_file)
             self.write_text_to_file(self.get_contents_of_file().strip())
             self.is_encrypted = False
         else:
@@ -61,8 +61,8 @@ class EncryptionFile(TextFile, ByteFile):
         the encrypted file lines in a new list.
         """
         file_lines = self.get_text_lines_as_list()
-        encrypted_file_lines = map_file_lines(file_lines,
-                                              self.encrypt_line)
+        encrypted_file_lines = self.map_file_lines(file_lines,
+                                                   self.encrypt_line)
         return encrypted_file_lines
 
     def decrypt_byte_lines(self):
@@ -72,8 +72,8 @@ class EncryptionFile(TextFile, ByteFile):
         the decrypted file lines in a new list.
         """
         file_lines = self.get_byte_lines_as_list()
-        decrypted_file_lines = map_file_lines(file_lines,
-                                              self.decrypt_line)
+        decrypted_file_lines = self.map_file_lines(file_lines,
+                                                   self.decrypt_line)
         decrypted_file_lines.remove(None)
         return decrypted_file_lines
 

@@ -14,6 +14,7 @@ from tests.fixtures import base_file, text_file  # noqa: F401, E402
 from tests.fixtures import env_setup_for_file_object  # noqa: F401, E402
 from tests.fixtures import CONTENTS_OF_TEXT_FILE  # noqa: E402
 from tests.fixtures import TEST_FILE_LIST  # noqa: E402
+from tests.fixtures import TEST_FILE_LINE_LIST  # noqa: E402
 
 
 @mark.parametrize("file_path, is_file", [
@@ -164,6 +165,36 @@ def test_basefile_filepath_exists(env_setup_for_file_object,   # noqa: F811
 
 def test_basefile_get_contents_of_text_file(text_file):  # noqa: F811
     assert text_file.get_contents_of_file() == CONTENTS_OF_TEXT_FILE
+
+
+@mark.parametrize("my_list, expected_output", [
+    (TEST_FILE_LINE_LIST[0], ['', 'asdfasd', '', 'asdfadsf']),
+    (TEST_FILE_LINE_LIST[1], ['', '', '', 'asdfadsf']),
+])
+def test_basefile_strip_elements_of_list(my_list, expected_output):
+    my_file = create_base_file('test.txt', create_filepath=False)
+    my_list = my_file.strip_elements_of_list(my_list)
+    assert expected_output == my_list
+
+
+@mark.parametrize("my_list, expected_output", [
+    (TEST_FILE_LINE_LIST[0], ['asdfasd', 'asdfadsf\n']),
+    (TEST_FILE_LINE_LIST[1], ['asdfadsf\n']),
+])
+def test_basefile_remove_whitespace_elements(my_list, expected_output):
+    my_file = create_base_file('test.txt', create_filepath=False)
+    my_list = my_file.remove_whitespace_elements(my_list)
+    assert expected_output == my_list
+
+
+@mark.parametrize("my_list, expected_output", [
+    (TEST_FILE_LINE_LIST[0], ['asdfasd', 'asdfadsf']),
+    (TEST_FILE_LINE_LIST[1], ['asdfadsf']),
+])
+def test_basefile_clean_elements_of_whitespace(my_list, expected_output):
+    my_file = create_base_file('test.txt', create_filepath=False)
+    my_list = my_file.clean_elements_of_whitespace(my_list)
+    assert expected_output == my_list
 
 
 def test_basefile_str(base_file):  # noqa: F811

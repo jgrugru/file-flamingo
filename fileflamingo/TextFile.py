@@ -1,5 +1,5 @@
 from .BaseFile import BaseFile
-from .FileLines import clean_elements_of_whitespace
+# from .FileLines import clean_elements_of_whitespace
 
 
 class TextFile(BaseFile):
@@ -70,5 +70,5 @@ class TextFile(BaseFile):
         back to the file.
         """
         file_lines = self.get_text_lines_as_list()
-        file_lines = clean_elements_of_whitespace(file_lines)
+        file_lines = self.clean_elements_of_whitespace(file_lines)
         self.write_text_to_file('\n'.join(file_lines))

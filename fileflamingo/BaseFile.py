@@ -9,8 +9,8 @@ class BaseFile():
     absolute.
     """
 
-    def __init__(self, filepath):  # add a parameter that accepts
-        self.filepath = filepath   # and adds contents to file.
+    def __init__(self, filepath):
+        self.filepath = filepath
         self.is_encrypted = self.is_binary()
 
     def set_filepath(self, filepath):
@@ -140,6 +140,40 @@ class BaseFile():
             return False
         else:
             return self.filepath_exists() and not self.is_binary()
+
+    @staticmethod
+    def strip_elements_of_list(file_lines):
+        """
+        Strips each element in list, removing whitespace from
+        beginning and end of string.
+        """
+        return [line.strip() for line in file_lines]
+
+    @staticmethod
+    def remove_whitespace_elements(file_lines):
+        """
+        Remove all elements of list that are only whitespace.
+        """
+        return list(filter(lambda x: x.strip() != '', file_lines))
+
+    @staticmethod
+    def map_file_lines(file_lines, fn):
+        """
+        Accepts a file_lines list and a function. Creates a new list with
+        the contents passed through the funtion (fn).
+        """
+        return list(map(fn, file_lines))
+
+    @staticmethod
+    def clean_elements_of_whitespace(self, file_lines):
+        """
+        Removes all unnecessary whitespace from the list.
+        Strips each element followed by removing each
+        element that is only whitespace.
+        """
+        file_lines = self.strip_elements_of_list(file_lines)
+        file_lines = self.remove_whitespace_elements(file_lines)
+        return file_lines
 
     def __str__(self):
         return self.filepath
