@@ -100,7 +100,8 @@ Functions:
 - gen_pem_file
 - get_key
 
-# FileLines (File holds helper functions for dealing with file lines stored in a list)
+# FileLines
+FileLines holds helper functions for dealing with file lines stored in a list.
 
 Functions:
 - strip_elements_of_list
