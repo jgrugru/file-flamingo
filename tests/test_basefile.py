@@ -1,20 +1,15 @@
-from sys import path as syspath
 from os import path
 from pytest import mark
 
-PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
-
-syspath.append(PARENT_DIR)
-
-from fileflamingo.ByteFile import ByteFile  # noqa: E402
-from tests.fixtures import create_file  # noqa: E402
-from tests.fixtures import create_base_file  # noqa: E402
-from tests.fixtures import create_text_file_with_random_str  # noqa: E402
-from tests.fixtures import base_file, text_file  # noqa: F401, E402
-from tests.fixtures import env_setup_for_file_object  # noqa: F401, E402
-from tests.fixtures import CONTENTS_OF_TEXT_FILE  # noqa: E402
-from tests.fixtures import TEST_FILE_LIST  # noqa: E402
-from tests.fixtures import TEST_FILE_LINE_LIST  # noqa: E402
+from fileflamingo.ByteFile import ByteFile
+from tests.fixtures import create_file
+from tests.fixtures import create_base_file
+from tests.fixtures import create_text_file_with_random_str
+from tests.fixtures import base_file, text_file  # noqa: F401
+from tests.fixtures import env_setup_for_file_object  # noqa: F401
+from tests.fixtures import CONTENTS_OF_TEXT_FILE
+from tests.fixtures import TEST_FILE_LIST
+from tests.fixtures import TEST_FILE_LINE_LIST
 
 
 @mark.parametrize("file_path, is_file", [

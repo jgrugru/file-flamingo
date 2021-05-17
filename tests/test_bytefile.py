@@ -1,16 +1,10 @@
-from sys import path as syspath
-from os import path
 from pytest import mark
 
-PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
-
-syspath.append(PARENT_DIR)
-
-from tests.fixtures import create_byte_file_with_random_bytes  # noqa: E402
-from tests.fixtures import str_factory  # noqa: E402
-from tests.fixtures import base_file, text_file  # noqa: F401, E402
-from tests.fixtures import env_setup_for_file_object  # noqa: F401, E402
-from tests.fixtures import TEST_FILE_LIST  # noqa: E402'
+from tests.fixtures import create_byte_file_with_random_bytes
+from tests.fixtures import str_factory
+from tests.fixtures import base_file, text_file  # noqa: F401
+from tests.fixtures import env_setup_for_file_object  # noqa: F401
+from tests.fixtures import TEST_FILE_LIST
 
 
 @mark.parametrize("file_path, contents_of_file, is_file", [

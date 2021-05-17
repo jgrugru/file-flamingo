@@ -164,14 +164,15 @@ class BaseFile():
         """
         return list(map(fn, file_lines))
 
+    @classmethod
     def clean_elements_of_whitespace(self, file_lines):
         """
         Removes all unnecessary whitespace from the list.
         Strips each element followed by removing each
         element that is only whitespace.
         """
-        file_lines = self.strip_elements_of_list(file_lines)
-        file_lines = self.remove_whitespace_elements(file_lines)
+        file_lines = BaseFile.strip_elements_of_list(file_lines)
+        file_lines = BaseFile.remove_whitespace_elements(file_lines)
         return file_lines
 
     def __str__(self):

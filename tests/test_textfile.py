@@ -1,11 +1,5 @@
-from sys import path as syspath
-from os import path
-
-PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
-syspath.append(PARENT_DIR)
-
-from tests.fixtures import text_file  # noqa: F401, E402
-from tests.fixtures import CONTENTS_OF_TEXT_FILE  # noqa: E402
+from tests.fixtures import text_file  # noqa: F401
+from tests.fixtures import CONTENTS_OF_TEXT_FILE
 
 
 def test_text_file_init(text_file):  # noqa: F811

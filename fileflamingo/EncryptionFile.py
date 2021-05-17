@@ -1,7 +1,6 @@
 from .TextFile import TextFile
 from .ByteFile import ByteFile
 from .Encryptor import Encryptor
-# from .FileLines import map_file_lines
 
 
 class EncryptionFile(TextFile, ByteFile):

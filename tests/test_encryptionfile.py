@@ -1,17 +1,20 @@
-from sys import path as syspath
 from os import path
 from pytest import mark, fail
 
+from fileflamingo.EncryptionFile import EncryptionFile
+from fileflamingo.TextFile import TextFile
+from tests.fixtures import (rsa_file,  # noqa: F401
+                            encryptor,
+                            encryption_file,
+                            text_file,
+                            base_file)
+from tests.fixtures import (str_factory,
+                            create_file,
+                            encrypted_bytes_generator)
+from tests.fixtures import ENCRYPT_CHAR_LIMIT
+
+
 PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
-
-syspath.append(PARENT_DIR)
-
-from fileflamingo.EncryptionFile import EncryptionFile  # noqa: E402
-from fileflamingo.TextFile import TextFile  # noqa: E402
-
-from tests.fixtures import rsa_file, encryptor, encryption_file, text_file, base_file  # noqa: E501, F401, E402
-from tests.fixtures import str_factory, create_file, encrypted_bytes_generator  # noqa: E501, E402
-from tests.fixtures import ENCRYPT_CHAR_LIMIT  # noqa: E402
 
 
 @mark.parametrize("str_to_encrypt, exception_raised", [
@@ -126,11 +129,3 @@ def test_encryptionfile_accepts_file_object_as_arguments(base_file, rsa_file):  
     except TypeError:
         fail("Failed -- TypeError -- on \
              test_encryptionfile_accepts_file_object_as_arguments.")
-
-
-def test_rsafile_gen_pem_file(rsa_file):  # noqa: F811
-    assert rsa_file.filepath_exists()
-
-
-def test_rsafile_get_key(rsa_file):  # noqa: F811
-    assert rsa_file.get_key()
