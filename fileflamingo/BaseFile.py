@@ -27,16 +27,16 @@ class BaseFile():
         """
         tail_head_tuple = path.split(self.filepath)
         if tail_head_tuple[0] == '':
-            self.create_file()
+            self.__create_file()
         else:
             makedirs(path.dirname(self.filepath), exist_ok=True)
-            self.create_file()
+            self.__create_file()
 
-    def create_file(self):
+    def __create_file(self):
         """
-        Creates a single file. Will not work
-        if there are parent directories or if the filepath
-        is a directory.
+        Creates a single file. Only intended for use inside this
+        class. Will not work if there are parent directories or
+        if the filepath is a directory.
         """
         try:
             with open(self.filepath, "a") as f:
@@ -164,8 +164,8 @@ class BaseFile():
         """
         return list(map(fn, file_lines))
 
-    @classmethod
-    def clean_elements_of_whitespace(self, file_lines):
+    @staticmethod
+    def clean_elements_of_whitespace(file_lines):
         """
         Removes all unnecessary whitespace from the list.
         Strips each element followed by removing each
