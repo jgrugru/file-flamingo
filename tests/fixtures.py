@@ -1,20 +1,16 @@
-from sys import path as syspath
 from os import path, chdir
 from pytest import fixture
 from random import choice
 from string import ascii_uppercase
 from random import randint
 
-PARENT_DIR = path.abspath(path.join(path.dirname(__file__), path.pardir))
 
-syspath.append(PARENT_DIR)
-
-from fileflamingo.BaseFile import BaseFile              # noqa: E402
-from fileflamingo.ByteFile import ByteFile                # noqa: E402
-from fileflamingo.RSAFile import RSAFile                # noqa: E402
-from fileflamingo.EncryptionFile import EncryptionFile  # noqa: E402
-from fileflamingo.TextFile import TextFile              # noqa: E402
-from fileflamingo.Encryptor import Encryptor            # noqa: E402
+from fileflamingo.BaseFile import BaseFile
+from fileflamingo.ByteFile import ByteFile
+from fileflamingo.RSAFile import RSAFile
+from fileflamingo.EncryptionFile import EncryptionFile
+from fileflamingo.TextFile import TextFile
+from fileflamingo.Encryptor import Encryptor
 
 CONTENTS_OF_TEXT_FILE = "USERNAME=JGRUGRU\nPASSWORD=12341515134$@#$^"
 
@@ -64,7 +60,7 @@ def create_text_file_with_random_str(filepath):
     return my_file
 
 
-def create_byte_file_with_random_bytes(filepath, text_str):
+def create_byte_file(filepath, text_str=''):
     my_file = ByteFile(filepath)
     my_file.create_filepath()
     my_file.append_bytes_to_file(text_str)

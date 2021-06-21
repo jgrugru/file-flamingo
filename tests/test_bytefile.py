@@ -1,6 +1,6 @@
 from pytest import mark
 
-from tests.fixtures import create_byte_file_with_random_bytes
+from tests.fixtures import create_byte_file
 from tests.fixtures import str_factory
 from tests.fixtures import base_file, text_file  # noqa: F401
 from tests.fixtures import env_setup_for_file_object  # noqa: F401
@@ -25,8 +25,7 @@ def test_basefile_append_byte_line_to_file(env_setup_for_file_object,  # noqa: E
                                            is_file):
     my_file = None
     try:
-        my_file = create_byte_file_with_random_bytes(file_path,
-                                                     contents_of_file)
+        my_file = create_byte_file(file_path, contents_of_file)
     except IsADirectoryError:
         pass
 
