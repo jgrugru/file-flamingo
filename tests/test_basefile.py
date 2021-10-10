@@ -12,42 +12,47 @@ from tests.fixtures import TEST_FILE_LIST
 from tests.fixtures import TEST_FILE_LINE_LIST
 
 
-@mark.parametrize("file_path, is_file", [
-    (TEST_FILE_LIST[0], True),
-    (TEST_FILE_LIST[1], True),
-    (TEST_FILE_LIST[2], True),
-    (TEST_FILE_LIST[3], False),
-    (TEST_FILE_LIST[4], False),
-    (TEST_FILE_LIST[5], False),
-    (TEST_FILE_LIST[6], True),
-    (TEST_FILE_LIST[7], True),
-    (TEST_FILE_LIST[8], False),
-    (TEST_FILE_LIST[9], True),
-])
-def test_basefile_create_filepath(env_setup_for_file_object,  # noqa: F811
-                                  file_path,
-                                  is_file):
+@mark.parametrize(
+    "file_path, is_file",
+    [
+        (TEST_FILE_LIST[0], True),
+        (TEST_FILE_LIST[1], True),
+        (TEST_FILE_LIST[2], True),
+        (TEST_FILE_LIST[3], False),
+        (TEST_FILE_LIST[4], False),
+        (TEST_FILE_LIST[5], False),
+        (TEST_FILE_LIST[6], True),
+        (TEST_FILE_LIST[7], True),
+        (TEST_FILE_LIST[8], False),
+        (TEST_FILE_LIST[9], True),
+    ],
+)
+def test_basefile_create_filepath(
+    env_setup_for_file_object, file_path, is_file  # noqa: F811
+):
     my_file = create_base_file(file_path)
     assert my_file.filepath_exists()
     assert my_file.is_file() == is_file
 
 
-@mark.parametrize("file_path, exception_raised", [
-    (TEST_FILE_LIST[0], False),
-    (TEST_FILE_LIST[1], False),
-    (TEST_FILE_LIST[2], False),
-    (TEST_FILE_LIST[3], True),
-    (TEST_FILE_LIST[4], True),
-    (TEST_FILE_LIST[5], True),
-    (TEST_FILE_LIST[6], False),
-    (TEST_FILE_LIST[7], False),
-    (TEST_FILE_LIST[8], True),
-    (TEST_FILE_LIST[9], False),
-
-])
-def test_basefile_delete_filepath(env_setup_for_file_object,   # noqa: F811
-                                  file_path,
-                                  exception_raised):
+@mark.parametrize(
+    "file_path, exception_raised",
+    [
+        (TEST_FILE_LIST[0], False),
+        (TEST_FILE_LIST[1], False),
+        (TEST_FILE_LIST[2], False),
+        (TEST_FILE_LIST[3], True),
+        (TEST_FILE_LIST[4], True),
+        (TEST_FILE_LIST[5], True),
+        (TEST_FILE_LIST[6], False),
+        (TEST_FILE_LIST[7], False),
+        (TEST_FILE_LIST[8], True),
+        (TEST_FILE_LIST[9], False),
+    ],
+)
+def test_basefile_delete_filepath(
+    env_setup_for_file_object, file_path, exception_raised  # noqa: F811
+):
     my_file = create_base_file(file_path)
 
     was_exception_raised = False
@@ -59,15 +64,17 @@ def test_basefile_delete_filepath(env_setup_for_file_object,   # noqa: F811
     assert was_exception_raised == exception_raised
 
 
-@mark.parametrize("file_path, creates_file, exception_raised", [
-    (TEST_FILE_LIST[0], True, False),
-    (TEST_FILE_LIST[3], True, True),
-    (TEST_FILE_LIST[0], False, True),
-])
-def test_basefile_clear_file(env_setup_for_file_object,   # noqa: F811
-                             creates_file,
-                             file_path,
-                             exception_raised):
+@mark.parametrize(
+    "file_path, creates_file, exception_raised",
+    [
+        (TEST_FILE_LIST[0], True, False),
+        (TEST_FILE_LIST[3], True, True),
+        (TEST_FILE_LIST[0], False, True),
+    ],
+)
+def test_basefile_clear_file(
+    env_setup_for_file_object, creates_file, file_path, exception_raised  # noqa: F811
+):
     my_file = create_base_file(file_path, create_filepath=creates_file)
 
     was_exception_raised = False
@@ -80,8 +87,9 @@ def test_basefile_clear_file(env_setup_for_file_object,   # noqa: F811
 
 
 def test_basefile_clear_file_doesnt_create_file(tmp_path):
-    my_file = create_base_file(path.join(tmp_path, 'testing.txt'),
-                               create_filepath=False)
+    my_file = create_base_file(
+        path.join(tmp_path, "testing.txt"), create_filepath=False
+    )
     try:
         my_file.clear_file()
     except (FileNotFoundError, IsADirectoryError):
@@ -89,18 +97,23 @@ def test_basefile_clear_file_doesnt_create_file(tmp_path):
     assert not my_file.filepath_exists()
 
 
-@mark.parametrize("file_path, contents_of_file, \
-                  creates_file, expected_output", [
-    (TEST_FILE_LIST[0], None, True, False),
-    (TEST_FILE_LIST[3], None, True, False),
-    (TEST_FILE_LIST[0], None, False, False),
-    (TEST_FILE_LIST[0], b'\x00\x01\xffsd', True, True),
-])
-def test_basefile_is_binary(env_setup_for_file_object,   # noqa: F811
-                            file_path,
-                            creates_file,
-                            contents_of_file,
-                            expected_output):
+@mark.parametrize(
+    "file_path, contents_of_file, \
+                  creates_file, expected_output",
+    [
+        (TEST_FILE_LIST[0], None, True, False),
+        (TEST_FILE_LIST[3], None, True, False),
+        (TEST_FILE_LIST[0], None, False, False),
+        (TEST_FILE_LIST[0], b"\x00\x01\xffsd", True, True),
+    ],
+)
+def test_basefile_is_binary(
+    env_setup_for_file_object,  # noqa: F811
+    file_path,
+    creates_file,
+    contents_of_file,
+    expected_output,
+):
     my_file = create_file(ByteFile, file_path)
     if creates_file:
         my_file.create_filepath()
@@ -111,22 +124,24 @@ def test_basefile_is_binary(env_setup_for_file_object,   # noqa: F811
     assert result == expected_output
 
 
-@mark.parametrize("filepath, expected_result", [
-    (TEST_FILE_LIST[0], False),
-    (TEST_FILE_LIST[1], False),
-    (TEST_FILE_LIST[2], False),
-    (TEST_FILE_LIST[3], True),
-    (TEST_FILE_LIST[4], True),
-    (TEST_FILE_LIST[5], True),
-    (TEST_FILE_LIST[6], False),
-    (TEST_FILE_LIST[7], False),
-    (TEST_FILE_LIST[8], True),
-    (TEST_FILE_LIST[9], False),
-
-])
-def test_basefile_is_empty(env_setup_for_file_object,   # noqa: F811
-                           filepath,
-                           expected_result):
+@mark.parametrize(
+    "filepath, expected_result",
+    [
+        (TEST_FILE_LIST[0], False),
+        (TEST_FILE_LIST[1], False),
+        (TEST_FILE_LIST[2], False),
+        (TEST_FILE_LIST[3], True),
+        (TEST_FILE_LIST[4], True),
+        (TEST_FILE_LIST[5], True),
+        (TEST_FILE_LIST[6], False),
+        (TEST_FILE_LIST[7], False),
+        (TEST_FILE_LIST[8], True),
+        (TEST_FILE_LIST[9], False),
+    ],
+)
+def test_basefile_is_empty(
+    env_setup_for_file_object, filepath, expected_result  # noqa: F811
+):
     result = False
     try:
         my_file = create_text_file_with_random_str(filepath)
@@ -136,23 +151,24 @@ def test_basefile_is_empty(env_setup_for_file_object,   # noqa: F811
     assert result == expected_result
 
 
-@mark.parametrize("filepath, create_file, expected_result", [
-    (TEST_FILE_LIST[0], True, True),
-    (TEST_FILE_LIST[1], True, True),
-    (TEST_FILE_LIST[2], True, True),
-    (TEST_FILE_LIST[3], True, True),
-    (TEST_FILE_LIST[4], False, False),
-    (TEST_FILE_LIST[5], True, True),
-    (TEST_FILE_LIST[6], True, True),
-    (TEST_FILE_LIST[7], True, True),
-    (TEST_FILE_LIST[8], False, False),
-    (TEST_FILE_LIST[9], True, True),
-
-])
-def test_basefile_filepath_exists(env_setup_for_file_object,   # noqa: F811
-                                  create_file,
-                                  filepath,
-                                  expected_result):
+@mark.parametrize(
+    "filepath, create_file, expected_result",
+    [
+        (TEST_FILE_LIST[0], True, True),
+        (TEST_FILE_LIST[1], True, True),
+        (TEST_FILE_LIST[2], True, True),
+        (TEST_FILE_LIST[3], True, True),
+        (TEST_FILE_LIST[4], False, False),
+        (TEST_FILE_LIST[5], True, True),
+        (TEST_FILE_LIST[6], True, True),
+        (TEST_FILE_LIST[7], True, True),
+        (TEST_FILE_LIST[8], False, False),
+        (TEST_FILE_LIST[9], True, True),
+    ],
+)
+def test_basefile_filepath_exists(
+    env_setup_for_file_object, create_file, filepath, expected_result  # noqa: F811
+):
     my_file = create_base_file(filepath, create_filepath=create_file)
     result = my_file.filepath_exists()
     assert result == expected_result
@@ -162,32 +178,41 @@ def test_basefile_get_contents_of_text_file(text_file):  # noqa: F811
     assert text_file.get_contents_of_file() == CONTENTS_OF_TEXT_FILE
 
 
-@mark.parametrize("my_list, expected_output", [
-    (TEST_FILE_LINE_LIST[0], ['', 'asdfasd', '', 'asdfadsf']),
-    (TEST_FILE_LINE_LIST[1], ['', '', '', 'asdfadsf']),
-])
+@mark.parametrize(
+    "my_list, expected_output",
+    [
+        (TEST_FILE_LINE_LIST[0], ["", "asdfasd", "", "asdfadsf"]),
+        (TEST_FILE_LINE_LIST[1], ["", "", "", "asdfadsf"]),
+    ],
+)
 def test_basefile_strip_elements_of_list(my_list, expected_output):
-    my_file = create_base_file('test.txt', create_filepath=False)
+    my_file = create_base_file("test.txt", create_filepath=False)
     my_list = my_file.strip_elements_of_list(my_list)
     assert expected_output == my_list
 
 
-@mark.parametrize("my_list, expected_output", [
-    (TEST_FILE_LINE_LIST[0], ['asdfasd', 'asdfadsf\n']),
-    (TEST_FILE_LINE_LIST[1], ['asdfadsf\n']),
-])
+@mark.parametrize(
+    "my_list, expected_output",
+    [
+        (TEST_FILE_LINE_LIST[0], ["asdfasd", "asdfadsf\n"]),
+        (TEST_FILE_LINE_LIST[1], ["asdfadsf\n"]),
+    ],
+)
 def test_basefile_remove_whitespace_elements(my_list, expected_output):
-    my_file = create_base_file('test.txt', create_filepath=False)
+    my_file = create_base_file("test.txt", create_filepath=False)
     my_list = my_file.remove_whitespace_elements(my_list)
     assert expected_output == my_list
 
 
-@mark.parametrize("my_list, expected_output", [
-    (TEST_FILE_LINE_LIST[0], ['asdfasd', 'asdfadsf']),
-    (TEST_FILE_LINE_LIST[1], ['asdfadsf']),
-])
+@mark.parametrize(
+    "my_list, expected_output",
+    [
+        (TEST_FILE_LINE_LIST[0], ["asdfasd", "asdfadsf"]),
+        (TEST_FILE_LINE_LIST[1], ["asdfadsf"]),
+    ],
+)
 def test_basefile_clean_elements_of_whitespace(my_list, expected_output):
-    my_file = create_base_file('test.txt', create_filepath=False)
+    my_file = create_base_file("test.txt", create_filepath=False)
     my_list = my_file.clean_elements_of_whitespace(my_list)
     assert expected_output == my_list
 

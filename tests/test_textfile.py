@@ -9,7 +9,7 @@ def test_text_file_init(text_file):  # noqa: F811
 
 def test_textfile_get_text_lines_as_list(text_file):  # noqa: F811
     my_list = text_file.get_text_lines_as_list()
-    assert my_list == ['USERNAME=JGRUGRU', 'PASSWORD=12341515134$@#$^']
+    assert my_list == ["USERNAME=JGRUGRU", "PASSWORD=12341515134$@#$^"]
 
 
 # def test_textfile_remove_blank_lines(text_file):

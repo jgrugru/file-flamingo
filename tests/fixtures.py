@@ -28,8 +28,8 @@ TEST_FILE_LIST = [
 ]
 
 TEST_FILE_LINE_LIST = [
-    ['', 'asdfasd', '\n', 'asdfadsf\n'],
-    ['', '\n\n\n\n\n\n', '\n', 'asdfadsf\n'],
+    ["", "asdfasd", "\n", "asdfadsf\n"],
+    ["", "\n\n\n\n\n\n", "\n", "asdfadsf\n"],
 ]
 
 ENCRYPT_CHAR_LIMIT = 245
@@ -60,7 +60,7 @@ def create_text_file_with_random_str(filepath):
     return my_file
 
 
-def create_byte_file(filepath, text_str=''):
+def create_byte_file(filepath, text_str=""):
     my_file = ByteFile(filepath)
     my_file.create_filepath()
     my_file.append_bytes_to_file(text_str)
@@ -68,7 +68,7 @@ def create_byte_file(filepath, text_str=''):
 
 
 def str_factory(str_size):
-    return ''.join(choice(ascii_uppercase) for i in range(str_size))
+    return "".join(choice(ascii_uppercase) for i in range(str_size))
 
 
 def encrypted_bytes_generator(encryptor, str_to_encrypt):
@@ -77,22 +77,21 @@ def encrypted_bytes_generator(encryptor, str_to_encrypt):
 
 @fixture
 def base_file(tmp_path):
-    my_file = create_file(BaseFile, path.join(tmp_path, 'test.txt'))
+    my_file = create_file(BaseFile, path.join(tmp_path, "test.txt"))
     return my_file
 
 
 @fixture
 def text_file(tmp_path):
     my_file = create_file(
-        TextFile,
-        path.join(tmp_path, 'test.txt'),
-        txt=CONTENTS_OF_TEXT_FILE)
+        TextFile, path.join(tmp_path, "test.txt"), txt=CONTENTS_OF_TEXT_FILE
+    )
     return my_file
 
 
 @fixture
 def rsa_file(tmp_path):
-    my_rsa_file = create_file(RSAFile, path.join(tmp_path, 'my_key.pem'))
+    my_rsa_file = create_file(RSAFile, path.join(tmp_path, "my_key.pem"))
     my_rsa_file.gen_pem_file()
     return my_rsa_file
 
@@ -104,17 +103,13 @@ def encryptor(rsa_file):
 
 @fixture
 def encryption_file(text_file, rsa_file):
-    my_encrypytion_file = create_file(
-        EncryptionFile,
-        text_file,
-        rsa_file)
+    my_encrypytion_file = create_file(EncryptionFile, text_file, rsa_file)
     return my_encrypytion_file
 
 
 @fixture
 def large_txt_file():
-    return BaseFile(path.abspath(path.join(path.dirname(__file__),
-                    'test_env.txt')))
+    return BaseFile(path.abspath(path.join(path.dirname(__file__), "test_env.txt")))
 
 
 @fixture
