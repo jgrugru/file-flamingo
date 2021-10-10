@@ -10,9 +10,7 @@ repos:
     - id: flake8
 -   repo: local
     hooks:
-    -   id: tests
-        name: run tests
-        entry: pytest -v
-        language: system
-        types: [python]
-        # stages: [push]
+    - id: pytest
+      name: pytest
+      entry: bash -c 'pytest -v'
+      language: system
