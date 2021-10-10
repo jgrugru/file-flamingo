@@ -1,8 +1,8 @@
 from .BaseFile import BaseFile
 
-line_separator = b'aJh@WDFWDg-#4jZr'
+line_separator = b"aJh@WDFWDg-#4jZr"
 
- 
+
 class ByteFile(BaseFile):
     """
     ByteFile inherits from the base BaseFile class.
@@ -10,6 +10,7 @@ class ByteFile(BaseFile):
     a binary file. The functions in the class
     allow the user to read/write bytes to the file.
     """
+
     def __init__(self, filepath):
         super().__init__(str(filepath))
 
@@ -17,7 +18,7 @@ class ByteFile(BaseFile):
         """
         Writes data to the file as bytes.
         """
-        with open(self.filepath, 'wb') as env_file:
+        with open(self.filepath, "wb") as env_file:
             env_file.write(data)
 
     def append_byte_line_to_file(self, file_line):
@@ -33,14 +34,14 @@ class ByteFile(BaseFile):
         Appends data to the file as bytes.
         Creates file if it does not exist.
         """
-        with open(self.filepath, 'ab+') as env_file:
+        with open(self.filepath, "ab+") as env_file:
             env_file.write(data)
 
     def get_bytes_from_file(self):
         """
         Returns the bytes read from the file.
         """
-        with open(self.filepath, 'rb') as my_file:
+        with open(self.filepath, "rb") as my_file:
             data = my_file.read()
         return data
 
