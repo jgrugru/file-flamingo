@@ -2,7 +2,7 @@ from .BaseFile import BaseFile
 
 line_separator = b'aJh@WDFWDg-#4jZr'
 
-
+ 
 class ByteFile(BaseFile):
     """
     ByteFile inherits from the base BaseFile class.
