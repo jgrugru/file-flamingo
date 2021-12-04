@@ -1,6 +1,8 @@
 from os import path, remove, stat, makedirs
+from dataclasses import dataclass
+from pathlib import Path
 
-
+@dataclass
 class BaseFile():
     """
     Base file class that can be utilized by any
@@ -8,9 +10,10 @@ class BaseFile():
     initialized with a filepath, either relative or
     absolute.
     """
+    filepath: str
 
-    def __init__(self, filepath):
-        self.filepath = filepath
+    def __post_init__(self):
+        self.path = Path(self.filepath)
         self.is_encrypted = self.is_binary()
 
     def set_filepath(self, filepath):
@@ -25,24 +28,33 @@ class BaseFile():
         First creates the directory paths and then tries
         to create the filepath if the filepath is a file.
         """
-        tail_head_tuple = path.split(self.filepath)
-        if tail_head_tuple[0] == '':
-            self.__create_file()
-        else:
-            makedirs(path.dirname(self.filepath), exist_ok=True)
-            self.__create_file()
-
-    def __create_file(self):
-        """
-        Creates a single file. Only intended for use inside this
-        class. Will not work if there are parent directories or
-        if the filepath is a directory.
-        """
         try:
-            with open(self.filepath, "a") as f:
-                f.write("")
+            self.path.mkdir(exist_ok=True)
         except Exception:
-            pass
+            parent_dirs = self.path.parents[0]
+            makedirs(parent_dirs)
+            self.path.touch(exist_ok=True)
+
+        # makedirs(self.path.parents)
+        # tail_head_tuple = path.split(self.path)
+        # print(tail_head_tuple)
+        # if tail_head_tuple[0] == '':
+        #     self.__create_file()
+        # else:
+        #     makedirs(path.dirname(self.filepath), exist_ok=True)
+        #     self.__create_file()
+
+    # def __create_file(self):
+    #     """
+    #     Creates a single file. Only intended for use inside this
+    #     class. Will not work if there are parent directories or
+    #     if the filepath is a directory.
+    #     """
+    #     try:
+    #         with open(self.path, "a") as f:
+    #             f.write("")
+    #     except Exception:
+    #         pass
 
     def delete_file(self):
         """
@@ -51,7 +63,7 @@ class BaseFile():
         FileNotFoundError is raised. If the filepath
         is a directory, a IsADirectoryError is raised.
         """
-        remove(self.filepath)
+        remove(self.path)
 
     def clear_file(self):
         """
@@ -60,7 +72,7 @@ class BaseFile():
         is raised. If the filepath is a directory,
         a IsADirectoryError is raised.
         """
-        with open(self.filepath, 'r+') as f:
+        with open(self.path, 'r+') as f:
             f.truncate()
 
     def is_binary(self):
@@ -76,7 +88,7 @@ class BaseFile():
         False if the file is a directory.
         """
         try:
-            with open(self.filepath, "r") as f:
+            with open(self.path, "r") as f:
                 f.read()
         except UnicodeDecodeError:
             return True
@@ -101,20 +113,20 @@ class BaseFile():
         Utilizes the os.path.isdir() function
         from the os module.
         """
-        return path.isdir(self.filepath)
+        return self.path.is_dir()
 
     def is_file(self):
         """
         Utilizes the os.path.isfile() function
         from the os module.
         """
-        return path.isfile(self.filepath)
+        return self.path.is_file()
 
     def filepath_exists(self):
         """
         Returns true if the file is a dir or a file.
         """
-        if path.isdir(self.filepath) or path.exists(self.filepath):
+        if self.is_dir() or self.path.exists():
             return True
         else:
             return False
@@ -176,4 +188,4 @@ class BaseFile():
         return file_lines
 
     def __str__(self):
-        return self.filepath
+        return str(self.path)
